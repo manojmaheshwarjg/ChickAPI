@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/images/logo.svg" alt="MagicAPI Logo" width="120" height="120">
-</p>
-
 <h1 align="center">MagicAPI - Visual API Flow Designer</h1>
 
 <p align="center">
