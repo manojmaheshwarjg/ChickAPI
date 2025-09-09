@@ -9,10 +9,10 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'MagicAPI - Visual API Flow Designer',
+  title: 'ChickAPI - Visual API Flow Designer',
   description: 'Enterprise-grade visual API workflow designer and testing platform',
   keywords: 'API, testing, workflow, visual programming, REST, GraphQL',
-  authors: [{ name: 'MagicAPI Team' }],
+  authors: [{ name: 'ChickAPI Team' }],
   viewport: 'width=device-width, initial-scale=1',
   themeColor: '#18181b',
 }

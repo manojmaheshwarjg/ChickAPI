@@ -1,4 +1,4 @@
-# MagicAPI Architecture
+# ChickAPI Architecture
 
 ## System Overview
 
@@ -118,7 +118,7 @@ sequenceDiagram
 ## Directory Structure
 
 ```
-MagicAPI/
+ChickAPI/
 ├── src/
 │   ├── main.ts              # Electron main process
 │   ├── core/                # Core business logic

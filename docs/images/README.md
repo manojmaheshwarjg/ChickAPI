@@ -1,6 +1,6 @@
-# MagicAPI Screenshots
+# ChickAPI Screenshots
 
-This directory contains screenshots of the MagicAPI application.
+This directory contains screenshots of the ChickAPI application.
 
 ## Required Screenshots:
 

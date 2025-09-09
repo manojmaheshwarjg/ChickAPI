@@ -19,5 +19,5 @@
   <circle cx="100" cy="105" r="15" fill="#fff" stroke="#333" stroke-width="2"/>
   
   <!-- Text -->
-  <text x="100" y="190" text-anchor="middle" fill="#2196f3" font-family="Arial" font-size="16" font-weight="bold">MagicAPI</text>
+  <text x="100" y="190" text-anchor="middle" fill="#2196f3" font-family="Arial" font-size="16" font-weight="bold">ChickAPI</text>
 </svg>

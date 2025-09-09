@@ -21,7 +21,7 @@ export default function Header({ workflowName }: HeaderProps) {
         <div className="flex items-center gap-6">
           {/* Text Logo */}
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-semibold text-gray-900">MagicAPI</h1>
+            <h1 className="text-xl font-semibold text-gray-900">ChickAPI</h1>
             <div className="h-5 w-px bg-gray-300"></div>
           </div>
 

@@ -133,7 +133,7 @@ export function initializeBuiltInNodes(): void {
             color: '#4CAF50',
             icon: 'http',
             version: '1.0.0',
-            author: 'MagicAPI'
+            author: 'ChickAPI'
         },
         defaultConfig: {
             method: 'GET',
@@ -206,7 +206,7 @@ export function initializeBuiltInNodes(): void {
             color: '#2196F3',
             icon: 'filter',
             version: '1.0.0',
-            author: 'MagicAPI'
+            author: 'ChickAPI'
         },
         defaultConfig: {
             path: '$',
@@ -253,7 +253,7 @@ export function initializeBuiltInNodes(): void {
             color: '#FF9800',
             icon: 'decision',
             version: '1.0.0',
-            author: 'MagicAPI'
+            author: 'ChickAPI'
         },
         defaultConfig: {
             operator: 'equals',
@@ -328,7 +328,7 @@ export function initializeBuiltInNodes(): void {
             color: '#9C27B0',
             icon: 'check',
             version: '1.0.0',
-            author: 'MagicAPI'
+            author: 'ChickAPI'
         },
         defaultConfig: {
             assertion: 'equals',
@@ -383,7 +383,7 @@ export function initializeBuiltInNodes(): void {
             color: '#607D8B',
             icon: 'variable',
             version: '1.0.0',
-            author: 'MagicAPI'
+            author: 'ChickAPI'
         },
         defaultConfig: {
             name: '',

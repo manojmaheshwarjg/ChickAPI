@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, dialog, ipcMain } from 'electron';
 import * as path from 'path';
 
-class MagicAPIApplication {
+class ChickAPIApplication {
     private mainWindow: BrowserWindow | null = null;
     private isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -39,7 +39,7 @@ class MagicAPIApplication {
             height: 900,
             minWidth: 1000,
             minHeight: 700,
-            title: 'MagicAPI - Visual API Flow Designer',
+            title: 'ChickAPI - Visual API Flow Designer',
             webPreferences: {
                 nodeIntegration: true,
                 contextIsolation: false
@@ -160,7 +160,7 @@ class MagicAPIApplication {
                 label: 'Help',
                 submenu: [
                     {
-                        label: 'About MagicAPI',
+                        label: 'About ChickAPI',
                         click: () => this.handleAbout()
                     },
                     {
@@ -180,7 +180,7 @@ class MagicAPIApplication {
         ipcMain.handle('show-open-dialog', async () => {
             const result = await dialog.showOpenDialog(this.mainWindow!, {
                 filters: [
-                    { name: 'MagicAPI Workflows', extensions: ['magicapi'] },
+                    { name: 'ChickAPI Workflows', extensions: ['chickapi'] },
                     { name: 'JSON Files', extensions: ['json'] }
                 ],
                 properties: ['openFile']
@@ -191,7 +191,7 @@ class MagicAPIApplication {
         ipcMain.handle('show-save-dialog', async () => {
             const result = await dialog.showSaveDialog(this.mainWindow!, {
                 filters: [
-                    { name: 'MagicAPI Workflows', extensions: ['magicapi'] },
+                    { name: 'ChickAPI Workflows', extensions: ['chickapi'] },
                     { name: 'JSON Files', extensions: ['json'] }
                 ]
             });
@@ -231,8 +231,8 @@ class MagicAPIApplication {
     private handleAbout(): void {
         dialog.showMessageBox(this.mainWindow!, {
             type: 'info',
-            title: 'About MagicAPI',
-            message: 'MagicAPI - Visual API Flow Designer',
+            title: 'About ChickAPI',
+            message: 'ChickAPI - Visual API Flow Designer',
             detail: 'Version 1.0.0\n\nA powerful visual programming tool for designing and testing API workflows.'
         });
     }
@@ -244,4 +244,4 @@ class MagicAPIApplication {
 }
 
 // Create the application instance
-new MagicAPIApplication();
+new ChickAPIApplication();

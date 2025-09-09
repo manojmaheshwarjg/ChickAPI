@@ -1,4 +1,4 @@
-<h1 align="center">MagicAPI - Visual API Flow Designer</h1>
+<h1 align="center">ChickAPI - Visual API Flow Designer</h1>
 
 <p align="center">
   <strong>Design, test, and manage API workflows visually with an intuitive node-based interface</strong>
@@ -20,20 +20,20 @@
   <a href="#-contributing">Contributing</a>
 </p>
 
-MagicAPI is a powerful visual programming tool for designing, testing, and managing API workflows. Built with Electron and TypeScript, it provides an intuitive node-based interface for creating complex API integrations without writing code.
+ChickAPI is a powerful visual programming tool for designing, testing, and managing API workflows. Built with Electron and TypeScript, it provides an intuitive node-based interface for creating complex API integrations without writing code.
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x600/1e1e1e/2196f3?text=MagicAPI+Visual+Interface" alt="MagicAPI Interface" width="800">
+  <img src="https://via.placeholder.com/800x600/1e1e1e/2196f3?text=ChickAPI+Visual+Interface" alt="ChickAPI Interface" width="800">
   <br>
   <em>Visual node-based API workflow designer with dark theme</em>
 </p>
 
-## 🎆 Why MagicAPI?
+## 🎆 Why ChickAPI?
 
 <table>
   <tr>
     <th>Feature</th>
-    <th>MagicAPI</th>
+    <th>ChickAPI</th>
     <th>Postman</th>
     <th>Insomnia</th>
   </tr>
@@ -93,7 +93,7 @@ MagicAPI is a powerful visual programming tool for designing, testing, and manag
 
 ## 🚀 Getting Started
 
-MagicAPI is available as both a desktop application (Electron) and a web application (Next.js).
+ChickAPI is available as both a desktop application (Electron) and a web application (Next.js).
 
 ### Prerequisites
 - Node.js 16.0 or higher
@@ -104,8 +104,8 @@ MagicAPI is available as both a desktop application (Electron) and a web applica
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/manojmaheshwarjg/MagicAPI.git
-cd MagicAPI
+git clone https://github.com/manojmaheshwarjg/ChickAPI.git
+cd ChickAPI
 ```
 
 2. Install dependencies:
@@ -118,7 +118,7 @@ npm install
 npm run build
 ```
 
-4. Run MagicAPI:
+4. Run ChickAPI:
 
 **Desktop Version (Electron):**
 ```bash
@@ -210,7 +210,7 @@ This workflow:
 
 ## 🏗️ Architecture
 
-MagicAPI is built with a modular architecture. For detailed architecture documentation, see [Architecture Documentation](docs/ARCHITECTURE.md).
+ChickAPI is built with a modular architecture. For detailed architecture documentation, see [Architecture Documentation](docs/ARCHITECTURE.md).
 
 ### High-Level Architecture
 
@@ -306,9 +306,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-- GitHub Issues: [Report bugs or request features](https://github.com/manojmaheshwarjg/MagicAPI/issues)
+- GitHub Issues: [Report bugs or request features](https://github.com/manojmaheshwarjg/ChickAPI/issues)
 - Email: manojmaheshwarjg@gmail.com
 
 ---
 
-<p align="center">Made with ❤️ by the MagicAPI Team</p>
+<p align="center">Made with ❤️ by the ChickAPI Team</p>

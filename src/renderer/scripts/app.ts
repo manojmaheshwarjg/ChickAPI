@@ -4,7 +4,7 @@ import { NodeFactory, initializeBuiltInNodes } from '../../core/NodeFactory';
 import { BaseNode, NodeCategory, Workflow } from '../../core/types';
 import { v4 as uuidv4 } from 'uuid';
 
-class MagicAPIApp {
+class ChickAPIApp {
     private canvasManager: CanvasManager | null = null;
     private currentWorkflow: Workflow | null = null;
     private selectedNodes: Set<string> = new Set();
@@ -519,4 +519,4 @@ class MagicAPIApp {
 }
 
 // Initialize the application
-new MagicAPIApp();
+new ChickAPIApp();

@@ -1,4 +1,4 @@
-// Web version of MagicAPI - no Electron dependencies
+// Web version of ChickAPI - no Electron dependencies
 import { CanvasManager } from '../renderer/canvas/CanvasManager';
 import { NodeFactory, initializeBuiltInNodes } from '../core/NodeFactory';
 import { BaseNode, NodeCategory, Workflow } from '../core/types';
@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { WebFileAdapter } from './adapters/WebFileAdapter';
 import { WebStorageAdapter } from './adapters/WebStorageAdapter';
 
-class MagicAPIWebApp {
+class ChickAPIWebApp {
     private canvasManager: CanvasManager | null = null;
     private currentWorkflow: Workflow | null = null;
     private selectedNodes: Set<string> = new Set();
@@ -59,7 +59,7 @@ class MagicAPIWebApp {
     private setupWebFeatures(): void {
         // GitHub button
         document.getElementById('btn-github')?.addEventListener('click', () => {
-            window.open('https://github.com/manojmaheshwarjg/MagicAPI', '_blank');
+            window.open('https://github.com/manojmaheshwarjg/ChickAPI', '_blank');
         });
 
         // Fullscreen button
@@ -550,4 +550,4 @@ class MagicAPIWebApp {
 }
 
 // Initialize the web application
-new MagicAPIWebApp();
+new ChickAPIWebApp();
