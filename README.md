@@ -93,6 +93,8 @@ MagicAPI is a powerful visual programming tool for designing, testing, and manag
 
 ## 🚀 Getting Started
 
+MagicAPI is available as both a desktop application (Electron) and a web application (Next.js).
+
 ### Prerequisites
 - Node.js 16.0 or higher
 - npm or yarn
@@ -117,9 +119,17 @@ npm run build
 ```
 
 4. Run MagicAPI:
+
+**Desktop Version (Electron):**
 ```bash
 npm start
 ```
+
+**Web Version (Next.js):**
+```bash
+npm run dev:next
+```
+Then open http://localhost:3000 in your browser.
 
 ### Development Mode
 

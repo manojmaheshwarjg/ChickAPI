@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-white text-gray-900;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Custom scrollbar for enterprise look */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+}
+
+@layer components {
+  /* Enterprise button styles */
+  .btn-primary {
+    @apply px-4 py-2 bg-orange-600 text-white font-medium rounded-md hover:bg-orange-700 
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 
+           transition-colors duration-200 text-sm;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 bg-white text-gray-700 font-medium rounded-md border border-gray-300 
+           hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 
+           transition-colors duration-200 text-sm;
+  }
+
+  .btn-ghost {
+    @apply px-3 py-2 text-gray-600 font-medium rounded-md hover:bg-gray-100 
+           focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 
+           transition-colors duration-200 text-sm;
+  }
+
+  /* Input styles */
+  .input-field {
+    @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm
+           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500
+           placeholder-gray-400 transition-colors duration-200;
+  }
+
+  /* Panel styles */
+  .panel {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+  }
+
+  .panel-header {
+    @apply px-4 py-3 border-b border-gray-200 flex items-center justify-between;
+  }
+
+  .panel-body {
+    @apply p-4;
+  }
+
+  /* Node styles */
+  .node-item {
+    @apply p-3 bg-white rounded-md border border-gray-200 hover:border-orange-400 
+           hover:shadow-md transition-all duration-200 cursor-move;
+  }
+
+  .node-category {
+    @apply mb-4;
+  }
+
+  .node-category-header {
+    @apply flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-gray-600 
+           uppercase tracking-wider hover:bg-gray-50 cursor-pointer rounded;
+  }
+
+  /* Sidebar styles */
+  .sidebar {
+    @apply bg-gray-50 border-r border-gray-200 h-full overflow-y-auto;
+  }
+
+  /* Toolbar styles */
+  .toolbar {
+    @apply bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2;
+  }
+
+  .toolbar-btn {
+    @apply p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors duration-200;
+  }
+
+  /* Canvas styles */
+  .canvas-container {
+    @apply bg-gray-50 relative overflow-hidden;
+    background-image: 
+      linear-gradient(to right, #f3f4f6 1px, transparent 1px),
+      linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Console styles */
+  .console {
+    @apply bg-gray-900 text-gray-100 font-mono text-xs;
+  }
+
+  .console-entry {
+    @apply px-3 py-1 hover:bg-gray-800 border-b border-gray-800;
+  }
+
+  /* Properties panel styles */
+  .property-group {
+    @apply mb-4 pb-4 border-b border-gray-200 last:border-0;
+  }
+
+  .property-label {
+    @apply text-xs font-medium text-gray-600 uppercase tracking-wider mb-1;
+  }
+
+  .property-value {
+    @apply text-sm text-gray-900;
+  }
+
+  /* Tab styles */
+  .tab-list {
+    @apply flex border-b border-gray-200;
+  }
+
+  .tab {
+    @apply px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 
+           border-b-2 border-transparent hover:border-gray-300 transition-colors duration-200;
+  }
+
+  .tab-active {
+    @apply text-orange-600 border-orange-600 hover:text-orange-600 hover:border-orange-600;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-error {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply inline-block w-4 h-4 border-2 border-gray-300 rounded-full border-t-orange-600 animate-spin;
+  }
+}
+
+@layer utilities {
+  /* Text selection */
+  .text-selection {
+    @apply selection:bg-orange-200 selection:text-orange-900;
+  }
+
+  /* Focus visible */
+  .focus-visible-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2;
+  }
+
+  /* Transition */
+  .transition-base {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  /* Shadow utilities */
+  .shadow-soft {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-medium {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-large {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}

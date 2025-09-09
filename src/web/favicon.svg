@@ -1,0 +1,23 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="#1e1e1e" stroke="#2196f3" stroke-width="4"/>
+  
+  <!-- Node representation -->
+  <rect x="40" y="40" width="50" height="30" rx="4" fill="#4CAF50"/>
+  <rect x="110" y="40" width="50" height="30" rx="4" fill="#2196F3"/>
+  <rect x="75" y="90" width="50" height="30" rx="4" fill="#FF9800"/>
+  <rect x="40" y="140" width="50" height="30" rx="4" fill="#9C27B0"/>
+  <rect x="110" y="140" width="50" height="30" rx="4" fill="#F44336"/>
+  
+  <!-- Connections -->
+  <path d="M65 70 L100 90" stroke="#666" stroke-width="2"/>
+  <path d="M135 70 L100 90" stroke="#666" stroke-width="2"/>
+  <path d="M100 120 L65 140" stroke="#666" stroke-width="2"/>
+  <path d="M100 120 L135 140" stroke="#666" stroke-width="2"/>
+  
+  <!-- Center node -->
+  <circle cx="100" cy="105" r="15" fill="#fff" stroke="#333" stroke-width="2"/>
+  
+  <!-- Text -->
+  <text x="100" y="190" text-anchor="middle" fill="#2196f3" font-family="Arial" font-size="16" font-weight="bold">MagicAPI</text>
+</svg>
