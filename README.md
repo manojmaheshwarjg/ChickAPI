@@ -41,7 +41,7 @@ MagicAPI is a powerful visual programming tool for designing, testing, and manag
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/MagicAPI.git
+git clone https://github.com/manojmaheshwarjg/MagicAPI.git
 cd MagicAPI
 ```
 
@@ -161,8 +161,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-- GitHub Issues: [Report bugs or request features](https://github.com/yourusername/MagicAPI/issues)
-- Email: your.email@example.com
+- GitHub Issues: [Report bugs or request features](https://github.com/manojmaheshwarjg/MagicAPI/issues)
+- Email: manojmaheshwarjg@gmail.com
 
 ---
 
