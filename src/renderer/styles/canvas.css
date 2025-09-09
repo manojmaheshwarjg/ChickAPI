@@ -1,0 +1,231 @@
+/* Canvas Container Styles */
+.canvas-container {
+    flex: 1;
+    position: relative;
+    background-color: var(--bg-primary);
+    overflow: hidden;
+}
+
+/* Main Canvas */
+.main-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+.main-canvas:active {
+    cursor: grabbing;
+}
+
+.main-canvas.connecting {
+    cursor: crosshair;
+}
+
+/* Grid Pattern */
+.canvas-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+    transform-origin: 0 0;
+    pointer-events: none;
+}
+
+/* Node Layer */
+.node-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.node-layer > * {
+    pointer-events: auto;
+}
+
+/* Connection Layer */
+.connection-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.connection-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Connection Paths */
+.connection-path {
+    fill: none;
+    stroke: #666;
+    stroke-width: 2;
+    pointer-events: stroke;
+    transition: stroke 0.2s;
+}
+
+.connection-path:hover {
+    stroke: var(--accent-primary);
+    stroke-width: 3;
+}
+
+.connection-path.selected {
+    stroke: var(--accent-primary);
+    stroke-width: 3;
+}
+
+.connection-path.running {
+    stroke: var(--success-color);
+    stroke-dasharray: 10, 5;
+    animation: dash 0.5s linear infinite;
+}
+
+.connection-path.error {
+    stroke: var(--error-color);
+}
+
+@keyframes dash {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -15;
+    }
+}
+
+/* Temporary Connection */
+.temp-connection {
+    fill: none;
+    stroke: var(--accent-primary);
+    stroke-width: 2;
+    stroke-dasharray: 5, 5;
+    pointer-events: none;
+}
+
+/* Minimap */
+.minimap {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 200px;
+    height: 150px;
+    background-color: rgba(37, 37, 37, 0.9);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 100;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.minimap:hover {
+    opacity: 1;
+}
+
+#minimap-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.minimap-viewport {
+    position: absolute;
+    border: 2px solid var(--accent-primary);
+    background-color: rgba(33, 150, 243, 0.1);
+    pointer-events: none;
+}
+
+/* Selection Box */
+.selection-box {
+    position: absolute;
+    border: 1px solid var(--accent-primary);
+    background-color: rgba(33, 150, 243, 0.1);
+    pointer-events: none;
+    z-index: 999;
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 100;
+}
+
+.zoom-btn {
+    width: 32px;
+    height: 32px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.zoom-btn:hover {
+    background-color: var(--bg-hover);
+}
+
+/* Canvas States */
+.canvas-container.dragging {
+    cursor: move !important;
+}
+
+.canvas-container.selecting {
+    cursor: crosshair !important;
+}
+
+/* Port Highlighting */
+.port-highlight {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    background-color: rgba(33, 150, 243, 0.3);
+    pointer-events: none;
+    animation: pulse 1s ease-in-out infinite;
+    z-index: 101;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
