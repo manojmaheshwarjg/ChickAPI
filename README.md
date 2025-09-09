@@ -1,12 +1,77 @@
-# MagicAPI - Visual API Flow Designer
+<p align="center">
+  <img src="docs/images/logo.svg" alt="MagicAPI Logo" width="120" height="120">
+</p>
+
+<h1 align="center">MagicAPI - Visual API Flow Designer</h1>
+
+<p align="center">
+  <strong>Design, test, and manage API workflows visually with an intuitive node-based interface</strong>
+</p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/electron-v28.0.0-blue.svg" alt="Electron Version">
   <img src="https://img.shields.io/badge/typescript-v5.3.0-blue.svg" alt="TypeScript Version">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+  <img src="https://img.shields.io/badge/platform-win%20%7C%20mac%20%7C%20linux-lightgrey.svg" alt="Platform">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
+</p>
+
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-screenshots">Screenshots</a> •
+  <a href="#-architecture">Architecture</a> •
+  <a href="#-contributing">Contributing</a>
 </p>
 
 MagicAPI is a powerful visual programming tool for designing, testing, and managing API workflows. Built with Electron and TypeScript, it provides an intuitive node-based interface for creating complex API integrations without writing code.
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x600/1e1e1e/2196f3?text=MagicAPI+Visual+Interface" alt="MagicAPI Interface" width="800">
+  <br>
+  <em>Visual node-based API workflow designer with dark theme</em>
+</p>
+
+## 🎆 Why MagicAPI?
+
+<table>
+  <tr>
+    <th>Feature</th>
+    <th>MagicAPI</th>
+    <th>Postman</th>
+    <th>Insomnia</th>
+  </tr>
+  <tr>
+    <td>Visual Workflow Designer</td>
+    <td>✅ Built-in</td>
+    <td>🚧 Limited</td>
+    <td>❌ No</td>
+  </tr>
+  <tr>
+    <td>Infinite Canvas</td>
+    <td>✅ Yes</td>
+    <td>❌ No</td>
+    <td>❌ No</td>
+  </tr>
+  <tr>
+    <td>Node-Based Logic</td>
+    <td>✅ Full</td>
+    <td>🚧 Basic</td>
+    <td>❌ No</td>
+  </tr>
+  <tr>
+    <td>Open Source</td>
+    <td>✅ Yes</td>
+    <td>❌ No</td>
+    <td>✅ Yes</td>
+  </tr>
+  <tr>
+    <td>Cross-Platform</td>
+    <td>✅ Yes</td>
+    <td>✅ Yes</td>
+    <td>✅ Yes</td>
+  </tr>
+</table>
 
 ## 🌟 Features
 
@@ -76,6 +141,31 @@ npm run dev
 3. **Configure Nodes**: Click on a node to see its properties in the right panel
 4. **Run Workflow**: Press F5 or click the Run button in the toolbar
 
+## 🎥 Quick Demo
+
+### Example: Testing a REST API
+
+```mermaid
+graph LR
+    A[Variable Node<br/>API_URL] --> B[HTTP GET<br/>/users]
+    B --> C[JSON Path<br/>$..id]
+    C --> D[Assert<br/>Length > 0]
+    B --> E[Assert<br/>Status = 200]
+    
+    style A fill:#607D8B
+    style B fill:#4CAF50
+    style C fill:#2196F3
+    style D fill:#9C27B0
+    style E fill:#9C27B0
+```
+
+This workflow:
+1. Sets the API base URL
+2. Makes a GET request to `/users`
+3. Extracts all user IDs from the response
+4. Asserts that users were returned
+5. Validates the HTTP status code
+
 ### Keyboard Shortcuts
 
 - `Ctrl/Cmd + N`: New workflow
@@ -87,23 +177,72 @@ npm run dev
 - `Delete`: Delete selected nodes
 - `Ctrl/Cmd + Mouse Wheel`: Zoom in/out
 
+## 📸 Screenshots
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://via.placeholder.com/400x300/1e1e1e/2196f3?text=Node+Palette" alt="Node Palette">
+      <p align="center"><em>Drag-and-drop node palette</em></p>
+    </td>
+    <td width="50%">
+      <img src="https://via.placeholder.com/400x300/1e1e1e/4caf50?text=Canvas+Workflow" alt="Canvas Workflow">
+      <p align="center"><em>Visual workflow on infinite canvas</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="https://via.placeholder.com/400x300/1e1e1e/ff9800?text=Node+Properties" alt="Node Properties">
+      <p align="center"><em>Configure node properties</em></p>
+    </td>
+    <td width="50%">
+      <img src="https://via.placeholder.com/400x300/1e1e1e/9c27b0?text=Console+Output" alt="Console Output">
+      <p align="center"><em>Real-time execution logs</em></p>
+    </td>
+  </tr>
+</table>
+
 ## 🏗️ Architecture
 
-MagicAPI is built with a modular architecture:
+MagicAPI is built with a modular architecture. For detailed architecture documentation, see [Architecture Documentation](docs/ARCHITECTURE.md).
 
+### High-Level Architecture
+
+```mermaid
+graph TB
+    subgraph "Frontend"
+        UI[User Interface]
+        Canvas[Canvas Manager]
+        Nodes[Node System]
+    end
+    
+    subgraph "Core"
+        WF[Workflow Engine]
+        EX[Execution Engine]
+        VAL[Validation]
+    end
+    
+    subgraph "Integration"
+        HTTP[HTTP Client]
+        FS[File System]
+        EXT[Extensions]
+    end
+    
+    UI --> Canvas
+    Canvas --> Nodes
+    Nodes --> WF
+    WF --> EX
+    EX --> HTTP
+    WF --> VAL
 ```
-src/
-├── main.ts              # Electron main process
-├── core/
-│   ├── types.ts         # TypeScript interfaces
-│   └── NodeFactory.ts   # Node creation and management
-├── renderer/
-│   ├── index.html       # Main UI
-│   ├── styles/          # CSS files
-│   ├── scripts/         # Renderer scripts
-│   └── canvas/          # Canvas management
-└── nodes/               # Node implementations
-```
+
+### Key Components
+
+- **Node System**: Extensible node architecture with TypeScript interfaces
+- **Canvas Manager**: Infinite canvas with pan, zoom, and grid snap
+- **Workflow Engine**: Graph-based execution with parallel processing
+- **Type System**: Strong typing for data flow between nodes
+- **Plugin Architecture**: Easy extension with custom nodes
 
 ## 🛠️ Building from Source
 
