@@ -307,8 +307,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📧 Contact
 
 - GitHub Issues: [Report bugs or request features](https://github.com/manojmaheshwarjg/ChickAPI/issues)
-- Email: manojmaheshwarjg@gmail.com / arun143
-
 ---
 
 <p align="center">Made with ❤️ by the ChickAPI Team</p>
