@@ -121,17 +121,17 @@ export class NodeFactory {
     }
 }
 
-// Initialize built-in node types
+// Initialize built-in nodes
 export function initializeBuiltInNodes(): void {
-    // HTTP Request Node
+    // HTTP GET Node
     NodeFactory.registerNodeType({
-        type: 'http_request',
+        type: 'http-get',
         metadata: {
-            title: 'HTTP Request',
-            description: 'Make HTTP requests to APIs',
+            title: 'GET Request',
+            description: 'Make HTTP GET request',
             category: NodeCategory.HTTP,
-            color: '#4CAF50',
-            icon: 'http',
+            color: 'bg-blue-500',
+            icon: 'GET',
             version: '1.0.0',
             author: 'ChickAPI'
         },
@@ -196,14 +196,159 @@ export function initializeBuiltInNodes(): void {
         }
     });
 
+    // HTTP POST Node
+    NodeFactory.registerNodeType({
+        type: 'http-post',
+        metadata: {
+            title: 'POST Request',
+            description: 'Make HTTP POST request',
+            category: NodeCategory.HTTP,
+            color: 'bg-blue-500',
+            icon: 'POST',
+            version: '1.0.0',
+            author: 'ChickAPI'
+        },
+        defaultConfig: {
+            method: 'POST',
+            url: '',
+            headers: {},
+            params: {},
+            body: '',
+            timeout: 30000,
+            followRedirects: true
+        },
+        inputs: [
+            {
+                id: 'url_input',
+                name: 'url',
+                type: DataType.STRING,
+                required: true,
+                description: 'The URL to request'
+            },
+            {
+                id: 'body_input',
+                name: 'body',
+                type: DataType.ANY,
+                required: false,
+                description: 'Request body'
+            }
+        ],
+        outputs: [
+            {
+                id: 'response_output',
+                name: 'response',
+                type: DataType.HTTP_RESPONSE,
+                required: false,
+                description: 'HTTP response'
+            }
+        ],
+        executor: async (node, inputs, context) => {
+            return null;
+        }
+    });
+
+    // HTTP PUT Node
+    NodeFactory.registerNodeType({
+        type: 'http-put',
+        metadata: {
+            title: 'PUT Request',
+            description: 'Make HTTP PUT request',
+            category: NodeCategory.HTTP,
+            color: 'bg-blue-500',
+            icon: 'PUT',
+            version: '1.0.0',
+            author: 'ChickAPI'
+        },
+        defaultConfig: {
+            method: 'PUT',
+            url: '',
+            headers: {},
+            params: {},
+            body: '',
+            timeout: 30000,
+            followRedirects: true
+        },
+        inputs: [
+            {
+                id: 'url_input',
+                name: 'url',
+                type: DataType.STRING,
+                required: true,
+                description: 'The URL to request'
+            },
+            {
+                id: 'body_input',
+                name: 'body',
+                type: DataType.ANY,
+                required: false,
+                description: 'Request body'
+            }
+        ],
+        outputs: [
+            {
+                id: 'response_output',
+                name: 'response',
+                type: DataType.HTTP_RESPONSE,
+                required: false,
+                description: 'HTTP response'
+            }
+        ],
+        executor: async (node, inputs, context) => {
+            return null;
+        }
+    });
+
+    // HTTP DELETE Node
+    NodeFactory.registerNodeType({
+        type: 'http-delete',
+        metadata: {
+            title: 'DELETE Request',
+            description: 'Make HTTP DELETE request',
+            category: NodeCategory.HTTP,
+            color: 'bg-blue-500',
+            icon: 'DELETE',
+            version: '1.0.0',
+            author: 'ChickAPI'
+        },
+        defaultConfig: {
+            method: 'DELETE',
+            url: '',
+            headers: {},
+            params: {},
+            timeout: 30000,
+            followRedirects: true
+        },
+        inputs: [
+            {
+                id: 'url_input',
+                name: 'url',
+                type: DataType.STRING,
+                required: true,
+                description: 'The URL to request'
+            }
+        ],
+        outputs: [
+            {
+                id: 'response_output',
+                name: 'response',
+                type: DataType.HTTP_RESPONSE,
+                required: false,
+                description: 'HTTP response'
+            }
+        ],
+        executor: async (node, inputs, context) => {
+            return null;
+        }
+    });
+
     // JSON Path Extractor Node
     NodeFactory.registerNodeType({
-        type: 'json_path',
+        type: 'json-path',
         metadata: {
             title: 'JSON Path',
             description: 'Extract data from JSON using JSONPath expressions',
             category: NodeCategory.DATA_TRANSFORM,
-            color: '#2196F3',
+            color: 'bg-green-500',
             icon: 'filter',
             version: '1.0.0',
             author: 'ChickAPI'
@@ -250,7 +395,7 @@ export function initializeBuiltInNodes(): void {
             title: 'Condition',
             description: 'Conditional branching based on input values',
             category: NodeCategory.CONTROL_FLOW,
-            color: '#FF9800',
+            color: 'bg-purple-500',
             icon: 'decision',
             version: '1.0.0',
             author: 'ChickAPI'
@@ -325,7 +470,7 @@ export function initializeBuiltInNodes(): void {
             title: 'Assert',
             description: 'Validate data against expected values',
             category: NodeCategory.TESTING,
-            color: '#9C27B0',
+            color: 'bg-orange-500',
             icon: 'check',
             version: '1.0.0',
             author: 'ChickAPI'
@@ -380,7 +525,7 @@ export function initializeBuiltInNodes(): void {
             title: 'Variable',
             description: 'Store and output constant or variable values',
             category: NodeCategory.UTILITY,
-            color: '#607D8B',
+            color: 'bg-gray-500',
             icon: 'variable',
             version: '1.0.0',
             author: 'ChickAPI'
@@ -403,6 +548,157 @@ export function initializeBuiltInNodes(): void {
         executor: async (node, inputs, context) => {
             // Variable execution logic will be implemented later
             return null;
+        }
+    });
+
+    // Discovery Node
+    NodeFactory.registerNodeType({
+        type: 'discovery',
+        metadata: {
+            title: 'API Discovery',
+            description: 'Discover API endpoints dynamically',
+            category: NodeCategory.PROCESSOR,
+            color: 'bg-purple-500',
+            icon: 'Search',
+            version: '1.0.0',
+            author: 'ChickAPI'
+        },
+        defaultConfig: {
+            url: '',
+            discoveryType: 'dynamic', // dynamic, specification, traffic
+            crawlDepth: 3,
+            timeout: 30000,
+            rateLimit: 10,
+            simulateInteractions: true,
+            includeStaticAssets: false,
+            filters: {
+                includePaths: [],
+                excludePaths: [],
+                includeHosts: [],
+                excludeHosts: []
+            },
+            authentication: {
+                type: 'none',
+                credentials: {}
+            },
+            exportFormat: 'openapi' // openapi, postman, har, markdown
+        },
+        inputs: [
+            {
+                id: 'url_input',
+                name: 'url',
+                type: DataType.STRING,
+                required: true,
+                description: 'URL to discover APIs from'
+            },
+            {
+                id: 'spec_input',
+                name: 'specification',
+                type: DataType.STRING,
+                required: false,
+                description: 'API specification (OpenAPI, Postman, etc.)'
+            },
+            {
+                id: 'config_input',
+                name: 'config',
+                type: DataType.OBJECT,
+                required: false,
+                description: 'Discovery configuration'
+            }
+        ],
+        outputs: [
+            {
+                id: 'endpoints_output',
+                name: 'endpoints',
+                type: DataType.ARRAY,
+                required: false,
+                description: 'Discovered API endpoints'
+            },
+            {
+                id: 'spec_output',
+                name: 'specification',
+                type: DataType.STRING,
+                required: false,
+                description: 'Generated API specification'
+            },
+            {
+                id: 'stats_output',
+                name: 'statistics',
+                type: DataType.OBJECT,
+                required: false,
+                description: 'Discovery statistics'
+            }
+        ],
+        executor: async (node, inputs, context) => {
+            // Discovery execution via API call (server-side only)
+            try {
+                const config = {
+                    sources: {
+                        dynamicCrawl: node.config.discoveryType === 'dynamic' ? {
+                            enabled: true,
+                            url: inputs.url || node.config.url,
+                            maxDepth: node.config.crawlDepth,
+                            timeout: node.config.timeout,
+                            rateLimit: node.config.rateLimit,
+                            simulateInteractions: node.config.simulateInteractions,
+                            includeStaticAssets: node.config.includeStaticAssets,
+                            filters: node.config.filters,
+                            authentication: node.config.authentication
+                        } : undefined,
+                        specifications: node.config.discoveryType === 'specification' && inputs.specification ? [{
+                            content: inputs.specification,
+                            type: 'openapi'
+                        }] : undefined
+                    },
+                    exportFormat: node.config.exportFormat
+                };
+                
+                // Call server-side API endpoint
+                const response = await fetch('/api/discovery/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Discovery failed: ${response.statusText}`);
+                }
+                
+                const results = await response.json();
+                
+                return {
+                    endpoints: results.endpoints,
+                    specification: results.specification,
+                    statistics: results.statistics
+                };
+            } catch (error) {
+                console.error('Discovery execution failed:', error);
+                throw error;
+            }
+        },
+        validator: (config) => {
+            const errors: any[] = [];
+            const warnings: any[] = [];
+            
+            if (!config.url && config.discoveryType === 'dynamic') {
+                errors.push({
+                    field: 'url',
+                    message: 'URL is required for dynamic discovery'
+                });
+            }
+            
+            if (config.crawlDepth < 1 || config.crawlDepth > 10) {
+                warnings.push({
+                    field: 'crawlDepth',
+                    message: 'Crawl depth should be between 1 and 10'
+                });
+            }
+            
+            return {
+                isValid: errors.length === 0,
+                errors,
+                warnings
+            };
         }
     });
 }

@@ -1,15 +1,61 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* React Flow Styles */
+@import 'reactflow/dist/style.css';
+
 @layer base {
   :root {
     --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+    
+    /* shadcn/ui CSS Variables - Light mode */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 24 89% 50%;  /* Orange 500 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 24 89% 50%;  /* Orange 500 */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 24 89% 50%;  /* Orange 500 */
+    --primary-foreground: 240 10% 3.9%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 24 89% 50%;  /* Orange 500 */
   }
 
   * {
-    @apply border-border;
+    @apply border-gray-200;
   }
 
   body {
@@ -37,23 +83,13 @@
 }
 
 @layer components {
-  /* Enterprise button styles */
+  /* Button styles */
   .btn-primary {
-    @apply px-4 py-2 bg-orange-600 text-white font-medium rounded-md hover:bg-orange-700 
-           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 
-           transition-colors duration-200 text-sm;
+    @apply px-4 py-2 bg-orange-500 text-white font-medium rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-white text-gray-700 font-medium rounded-md border border-gray-300 
-           hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 
-           transition-colors duration-200 text-sm;
-  }
-
-  .btn-ghost {
-    @apply px-3 py-2 text-gray-600 font-medium rounded-md hover:bg-gray-100 
-           focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 
-           transition-colors duration-200 text-sm;
+    @apply px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
   }
 
   /* Input styles */
@@ -171,10 +207,80 @@
     @apply bg-blue-100 text-blue-800;
   }
 
-  /* Loading spinner */
-  .spinner {
-    @apply inline-block w-4 h-4 border-2 border-gray-300 rounded-full border-t-orange-600 animate-spin;
+  /* Animated Connection Styles */
+  @keyframes flowAnimation {
+    0% { 
+      stroke-dashoffset: 12; 
+    }
+    100% { 
+      stroke-dashoffset: 0; 
+    }
   }
+  
+  @keyframes pulseFlow {
+    0%, 100% { 
+      opacity: 0.3; 
+      stroke-width: 2; 
+    }
+    50% { 
+      opacity: 0.8; 
+      stroke-width: 3; 
+    }
+  }
+
+
+  @keyframes particleFlow {
+    0% { 
+      opacity: 0; 
+      transform: scale(0.5); 
+    }
+    10%, 90% { 
+      opacity: 1; 
+      transform: scale(1); 
+    }
+    100% { 
+      opacity: 0; 
+      transform: scale(0.5); 
+    }
+  }
+
+  /* React Flow Edge Customization - Force immediate updates */
+  .react-flow__edge-path {
+    /* Remove ALL transitions for immediate path updates */
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .react-flow__edge {
+    transition: none !important;
+  }
+  
+  /* Only transition stroke properties on hover, not position */
+  .react-flow__edge:hover .react-flow__edge-path {
+    transition: stroke 0.2s ease, stroke-width 0.2s ease;
+    stroke-width: 3;
+  }
+
+  /* Custom edge classes */
+  .edge-active {
+    stroke: #3b82f6;
+    stroke-dasharray: 8 4;
+    animation: flowAnimation 2s linear infinite;
+  }
+
+  .edge-success {
+    stroke: #10b981;
+  }
+
+  .edge-error {
+    stroke: #ef4444;
+    animation: pulseFlow 1s ease-in-out infinite;
+  }
+
+  .edge-idle {
+    stroke: #9ca3af;
+  }
+
 }
 
 @layer utilities {

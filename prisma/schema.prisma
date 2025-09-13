@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Discovery Models
+model DiscoveryJob {
+  id          String    @id @default(cuid())
+  name        String
+  config      String    // JSON config
+  status      String    @default("pending") // pending, running, completed, failed
+  schedule    String?   // Cron expression for scheduled jobs
+  lastRun     DateTime?
+  nextRun     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  results     DiscoveryResult[]
+  endpoints   APIEndpoint[]
+}
+
+model DiscoveryResult {
+  id              String       @id @default(cuid())
+  jobId           String
+  job             DiscoveryJob @relation(fields: [jobId], references: [id])
+  statistics      String       // JSON statistics
+  discoveredAt    DateTime     @default(now())
+  endpointCount   Int
+  duration        Int          // in milliseconds
+  
+  @@index([jobId])
+}
+
+model APIEndpoint {
+  id              String       @id @default(cuid())
+  jobId           String?
+  job             DiscoveryJob? @relation(fields: [jobId], references: [id])
+  
+  url             String
+  method          String
+  pathPattern     String
+  summary         String?
+  description     String?
+  
+  // JSON fields
+  parameters      String?      // JSON array of parameters
+  requestBody     String?      // JSON request body schema
+  responses       String?      // JSON array of responses
+  authentication  String?      // JSON auth config
+  rateLimit       String?      // JSON rate limit info
+  tags            String?      // JSON array of tags
+  headers         String?      // JSON headers
+  
+  // Metadata
+  source          String       // specification, dynamic, manual
+  complexity      Float?
+  deprecated      Boolean      @default(false)
+  documentation   String?
+  
+  discoveredAt    DateTime     @default(now())
+  lastSeen        DateTime     @default(now())
+  lastUpdated     DateTime     @updatedAt
+  
+  // Relations
+  tests           APITest[]
+  changes         EndpointChange[]
+  
+  @@unique([url, method])
+  @@index([jobId])
+  @@index([method])
+  @@index([source])
+}
+
+model APITest {
+  id          String      @id @default(cuid())
+  endpointId  String
+  endpoint    APIEndpoint @relation(fields: [endpointId], references: [id])
+  
+  name        String
+  description String?
+  testType    String      // unit, integration, security, performance
+  testCode    String      // Generated test code
+  
+  lastRun     DateTime?
+  lastResult  String?     // passed, failed, skipped
+  lastError   String?
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  @@index([endpointId])
+}
+
+model EndpointChange {
+  id          String      @id @default(cuid())
+  endpointId  String
+  endpoint    APIEndpoint @relation(fields: [endpointId], references: [id])
+  
+  changeType  String      // added, modified, removed
+  field       String?     // Which field changed
+  oldValue    String?     // JSON of old value
+  newValue    String?     // JSON of new value
+  
+  detectedAt  DateTime    @default(now())
+  
+  notification Notification?
+  
+  @@index([endpointId])
+}
+
+model Notification {
+  id          String         @id @default(cuid())
+  changeId    String         @unique
+  change      EndpointChange @relation(fields: [changeId], references: [id])
+  
+  type        String         // email, webhook, in-app
+  recipient   String
+  subject     String
+  message     String
+  
+  sent        Boolean        @default(false)
+  sentAt      DateTime?
+  error       String?
+  
+  createdAt   DateTime       @default(now())
+  
+  @@index([sent])
+}
+
+// Workflow Integration
+model WorkflowNode {
+  id          String    @id @default(cuid())
+  workflowId  String
+  nodeType    String
+  position    String    // JSON {x, y}
+  config      String    // JSON configuration
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model WorkflowExecution {
+  id          String    @id @default(cuid())
+  workflowId  String
+  status      String    // running, completed, failed
+  logs        String    // JSON array of log entries
+  result      String?   // JSON result data
+  
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+}

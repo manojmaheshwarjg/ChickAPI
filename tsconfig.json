@@ -17,13 +17,21 @@
     "noEmit": false,
     "declaration": true,
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,
     "incremental": true,
     "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/src/*": ["src/*"]
+    },
     "plugins": [
       {
         "name": "next"
@@ -32,6 +40,10 @@
   },
   "include": [
     "src/**/*",
+    "app/**/*",
+    "components/**/*",
+    "lib/**/*",
+    "hooks/**/*",
     ".next/types/**/*.ts"
   ],
   "exclude": [

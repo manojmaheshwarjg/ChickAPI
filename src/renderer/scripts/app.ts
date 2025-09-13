@@ -1,11 +1,11 @@
 import { ipcRenderer } from 'electron';
-import { CanvasManager } from '../canvas/CanvasManager';
+// import { CanvasManager } from '../canvas/CanvasManager'; // Removed - using ReactFlow now
 import { NodeFactory, initializeBuiltInNodes } from '../../core/NodeFactory';
 import { BaseNode, NodeCategory, Workflow } from '../../core/types';
 import { v4 as uuidv4 } from 'uuid';
 
 class ChickAPIApp {
-    private canvasManager: CanvasManager | null = null;
+    // private canvasManager: CanvasManager | null = null; // Removed - using ReactFlow now
     private currentWorkflow: Workflow | null = null;
     private selectedNodes: Set<string> = new Set();
     private copiedNodes: BaseNode[] = [];

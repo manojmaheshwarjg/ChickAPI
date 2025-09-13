@@ -1,83 +1,105 @@
 import React from 'react'
+import Link from 'next/link'
 import { 
-  PlayIcon, 
-  DocumentDuplicateIcon,
-  CloudArrowUpIcon,
-  Cog6ToothIcon,
-  UserCircleIcon,
-  BellIcon,
-  QuestionMarkCircleIcon
-} from '@heroicons/react/24/outline'
+  Play, 
+  Copy,
+  CloudUpload,
+  Settings,
+  User,
+  Bell,
+  HelpCircle,
+  Search
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 interface HeaderProps {
   workflowName: string
+  onWorkflowNameChange?: (name: string) => void
 }
 
-export default function Header({ workflowName }: HeaderProps) {
+export default function Header({ workflowName, onWorkflowNameChange }: HeaderProps) {
   return (
-    <header className="bg-white border-b border-gray-200 px-4 py-3">
+    <header className="bg-background border-b border-border px-4 py-3">
       <div className="flex items-center justify-between">
         {/* Left Section */}
         <div className="flex items-center gap-6">
           {/* Text Logo */}
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-semibold text-gray-900">ChickAPI</h1>
-            <div className="h-5 w-px bg-gray-300"></div>
+            <h1 className="text-xl font-semibold text-foreground">ChickAPI</h1>
+            <div className="h-5 w-px bg-border"></div>
           </div>
 
           {/* Workflow Name */}
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="text"
               value={workflowName}
-              className="text-base font-medium text-gray-700 bg-transparent border-none outline-none hover:bg-gray-50 px-2 py-1 rounded transition-colors"
+              onChange={(e) => onWorkflowNameChange?.(e.target.value)}
+              className="text-base font-medium bg-transparent border-none shadow-none focus-visible:ring-0 hover:bg-muted/50 px-2 py-1 h-8 w-48"
               placeholder="Untitled Workflow"
             />
-            <button className="text-gray-400 hover:text-gray-600">
-              <DocumentDuplicateIcon className="w-4 h-4" />
-            </button>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+              <Copy className="w-4 h-4" />
+            </Button>
           </div>
         </div>
 
-        {/* Center Section - Environment Selector */}
-        <div className="flex items-center gap-2">
-          <select className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
-            <option>Development</option>
-            <option>Staging</option>
-            <option>Production</option>
-          </select>
-          <button className="btn-primary flex items-center gap-2">
-            <PlayIcon className="w-4 h-4" />
+        {/* Center Section - Environment Selector & Discovery */}
+        <div className="flex items-center gap-3">
+          {/* API Discovery Button */}
+          <Link href="/discovery" passHref>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              API Discovery
+            </Button>
+          </Link>
+          
+          <div className="h-5 w-px bg-border"></div>
+          
+          <Select defaultValue="development">
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="development">Development</SelectItem>
+              <SelectItem value="staging">Staging</SelectItem>
+              <SelectItem value="production">Production</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="primary">
+            <Play className="w-4 h-4 mr-2" />
             Run
-          </button>
+          </Button>
         </div>
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
           {/* Save Status */}
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <CloudArrowUpIcon className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <CloudUpload className="w-4 h-4" />
             <span>Saved</span>
           </div>
 
-          <div className="h-5 w-px bg-gray-300"></div>
+          <div className="h-5 w-px bg-border"></div>
 
           {/* Action Buttons */}
-          <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors">
-            <BellIcon className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors">
-            <QuestionMarkCircleIcon className="w-5 h-5" />
-          </button>
-          <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors">
-            <Cog6ToothIcon className="w-5 h-5" />
-          </button>
+          <Button variant="ghost" size="icon">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <HelpCircle className="w-5 h-5" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Settings className="w-5 h-5" />
+          </Button>
           
           {/* User Menu */}
-          <button className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-100 rounded-md transition-colors">
-            <UserCircleIcon className="w-6 h-6 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">User</span>
-          </button>
+          <Button variant="ghost" className="flex items-center gap-2 px-3">
+            <User className="w-6 h-6" />
+            <span className="text-sm font-medium">User</span>
+          </Button>
         </div>
       </div>
     </header>
