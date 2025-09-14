@@ -18,9 +18,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Custom ChickAPI variants matching your existing styles
-        primary: "bg-orange-500 text-white hover:bg-orange-600 focus:ring-orange-500",
-        muted: "bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500",
+        // Custom ChickAPI variants with Facebook theme
+        primary: "bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-primary",
+        muted: "bg-muted text-muted-foreground hover:bg-muted/80 focus:ring-ring",
       },
       size: {
         default: "h-10 px-4 py-2",

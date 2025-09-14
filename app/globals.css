@@ -9,103 +9,104 @@
   :root {
     --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
     
-    /* shadcn/ui CSS Variables - Light mode */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    /* Facebook Color Palette - Light Mode */
+    --background: 0 0% 97%; /* Clean Light Gray */
+    --foreground: 0 0% 15%; /* Dark Gray */
+    --card: 0 0% 100%; /* Pure White */
+    --card-foreground: 0 0% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 24 89% 50%;  /* Orange 500 */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 0 0% 15%;
+    --primary: 221 83% 53%; /* Facebook Blue #1877f2 */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 221 30% 95%; /* Light Facebook Blue */
+    --secondary-foreground: 221 83% 40%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 221 100% 60%; /* Bright Facebook Blue */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 24 89% 50%;  /* Orange 500 */
+    --border: 0 0% 90%;
+    --input: 0 0% 94%;
+    --ring: 221 83% 53%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 24 89% 50%;  /* Orange 500 */
-    --primary-foreground: 240 10% 3.9%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* Facebook Dark Mode Color Palette */
+    --background: 0 0% 7%; /* Facebook Dark Background */
+    --foreground: 0 0% 90%; /* Light Gray Text */
+    --card: 0 0% 10%; /* Dark Card Background */
+    --card-foreground: 0 0% 90%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 90%;
+    --primary: 221 83% 53%; /* Facebook Blue #1877f2 */
+    --primary-foreground: 0 0% 100%; /* White */
+    --secondary: 0 0% 15%; /* Dark Secondary */
+    --secondary-foreground: 0 0% 80%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 221 100% 65%; /* Bright Facebook Blue */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 24 89% 50%;  /* Orange 500 */
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 221 83% 53%;
   }
 
   * {
-    @apply border-gray-200;
+    @apply border-border;
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Custom scrollbar for enterprise look */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
+    @apply bg-secondary;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 rounded;
+    @apply bg-muted-foreground rounded;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-500;
+    @apply bg-accent;
   }
 }
 
 @layer components {
   /* Button styles */
   .btn-primary {
-    @apply px-4 py-2 bg-orange-500 text-white font-medium rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
+    @apply px-4 py-2 bg-primary text-primary-foreground font-medium rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply px-4 py-2 bg-secondary text-secondary-foreground font-medium rounded-md hover:bg-secondary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
   }
 
   /* Input styles */
   .input-field {
-    @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm
-           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500
-           placeholder-gray-400 transition-colors duration-200;
+    @apply w-full px-3 py-2 bg-card border border-border rounded-md text-sm
+           focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring
+           placeholder-muted-foreground transition-colors duration-200;
   }
 
   /* Panel styles */
   .panel {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+    @apply bg-card rounded-lg shadow-sm border border-border;
   }
 
   .panel-header {
-    @apply px-4 py-3 border-b border-gray-200 flex items-center justify-between;
+    @apply px-4 py-3 border-b border-border flex items-center justify-between;
   }
 
   .panel-body {
@@ -114,7 +115,7 @@
 
   /* Node styles */
   .node-item {
-    @apply p-3 bg-white rounded-md border border-gray-200 hover:border-orange-400 
+    @apply p-3 bg-card rounded-md border border-border hover:border-primary 
            hover:shadow-md transition-all duration-200 cursor-move;
   }
 
@@ -123,67 +124,67 @@
   }
 
   .node-category-header {
-    @apply flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-gray-600 
-           uppercase tracking-wider hover:bg-gray-50 cursor-pointer rounded;
+    @apply flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-muted-foreground 
+           uppercase tracking-wider hover:bg-secondary cursor-pointer rounded;
   }
 
   /* Sidebar styles */
   .sidebar {
-    @apply bg-gray-50 border-r border-gray-200 h-full overflow-y-auto;
+    @apply bg-card border-r border-border h-full overflow-y-auto;
   }
 
   /* Toolbar styles */
   .toolbar {
-    @apply bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2;
+    @apply bg-card border-b border-border px-4 py-2 flex items-center gap-2;
   }
 
   .toolbar-btn {
-    @apply p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors duration-200;
+    @apply p-2 text-muted-foreground hover:bg-secondary rounded-md transition-colors duration-200;
   }
 
   /* Canvas styles */
   .canvas-container {
-    @apply bg-gray-50 relative overflow-hidden;
+    @apply bg-background relative overflow-hidden;
     background-image: 
-      linear-gradient(to right, #f3f4f6 1px, transparent 1px),
-      linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
+      linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
   /* Console styles */
   .console {
-    @apply bg-gray-900 text-gray-100 font-mono text-xs;
+    @apply bg-background text-foreground font-mono text-xs;
   }
 
   .console-entry {
-    @apply px-3 py-1 hover:bg-gray-800 border-b border-gray-800;
+    @apply px-3 py-1 hover:bg-secondary border-b border-border;
   }
 
   /* Properties panel styles */
   .property-group {
-    @apply mb-4 pb-4 border-b border-gray-200 last:border-0;
+    @apply mb-4 pb-4 border-b border-border last:border-0;
   }
 
   .property-label {
-    @apply text-xs font-medium text-gray-600 uppercase tracking-wider mb-1;
+    @apply text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1;
   }
 
   .property-value {
-    @apply text-sm text-gray-900;
+    @apply text-sm text-foreground;
   }
 
   /* Tab styles */
   .tab-list {
-    @apply flex border-b border-gray-200;
+    @apply flex border-b border-border;
   }
 
   .tab {
-    @apply px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 
-           border-b-2 border-transparent hover:border-gray-300 transition-colors duration-200;
+    @apply px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground 
+           border-b-2 border-transparent hover:border-border transition-colors duration-200;
   }
 
   .tab-active {
-    @apply text-orange-600 border-orange-600 hover:text-orange-600 hover:border-orange-600;
+    @apply text-primary border-primary hover:text-primary hover:border-primary;
   }
 
   /* Badge styles */
@@ -263,7 +264,7 @@
 
   /* Custom edge classes */
   .edge-active {
-    stroke: #3b82f6;
+    stroke: hsl(var(--primary));
     stroke-dasharray: 8 4;
     animation: flowAnimation 2s linear infinite;
   }
@@ -278,7 +279,7 @@
   }
 
   .edge-idle {
-    stroke: #9ca3af;
+    stroke: hsl(var(--muted-foreground));
   }
 
 }
@@ -286,12 +287,12 @@
 @layer utilities {
   /* Text selection */
   .text-selection {
-    @apply selection:bg-orange-200 selection:text-orange-900;
+    @apply selection:bg-accent/30 selection:text-accent-foreground;
   }
 
   /* Focus visible */
   .focus-visible-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   /* Transition */
@@ -301,14 +302,14 @@
 
   /* Shadow utilities */
   .shadow-soft {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px 0 hsla(var(--foreground), 0.1), 0 1px 2px 0 hsla(var(--foreground), 0.06);
   }
 
   .shadow-medium {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px hsla(var(--foreground), 0.1), 0 2px 4px -1px hsla(var(--foreground), 0.06);
   }
 
   .shadow-large {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 15px -3px hsla(var(--foreground), 0.1), 0 4px 6px -2px hsla(var(--foreground), 0.05);
   }
 }
