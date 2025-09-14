@@ -56,6 +56,14 @@ export default function Header({ workflowName, onWorkflowNameChange }: HeaderPro
             </Button>
           </Link>
           
+          {/* Legacy Canvas Button */}
+          <Link href="/legacy-canvas" passHref>
+            <Button variant="outline" className="flex items-center gap-2">
+              <span className="text-xs">🔧</span>
+              Legacy Canvas
+            </Button>
+          </Link>
+          
           <div className="h-5 w-px bg-border"></div>
           
           <Select defaultValue="development">
