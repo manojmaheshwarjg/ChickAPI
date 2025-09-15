@@ -21,30 +21,30 @@ interface ToolbarProps {
 
 export default function Toolbar({ onRun, onStop, onSave, onUndo, onRedo }: ToolbarProps) {
   return (
-    <div className="bg-white border-b border-gray-200 px-3 py-2">
+    <div className="bg-card border-b border-border px-3 py-2">
       <div className="flex items-center justify-between">
         {/* Left Section - Edit Tools */}
         <div className="flex items-center gap-1">
           <button
             onClick={onUndo}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Undo"
           >
             <ArrowUturnLeftIcon className="w-4 h-4" />
           </button>
           <button
             onClick={onRedo}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Redo"
           >
             <ArrowUturnRightIcon className="w-4 h-4" />
           </button>
           
-          <div className="h-6 w-px bg-gray-300 mx-1"></div>
+          <div className="h-6 w-px bg-border mx-1"></div>
           
           <button
             onClick={onSave}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Save"
           >
             <DocumentArrowDownIcon className="w-4 h-4" />
@@ -54,34 +54,34 @@ export default function Toolbar({ onRun, onStop, onSave, onUndo, onRedo }: Toolb
         {/* Center Section - View Controls */}
         <div className="flex items-center gap-1">
           <button
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Zoom Out"
           >
             <MagnifyingGlassMinusIcon className="w-4 h-4" />
           </button>
           
-          <span className="px-3 py-1 text-xs font-medium text-gray-600 bg-gray-50 rounded">
+          <span className="px-3 py-1 text-xs font-medium text-muted-foreground bg-muted rounded">
             100%
           </span>
           
           <button
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Zoom In"
           >
             <MagnifyingGlassPlusIcon className="w-4 h-4" />
           </button>
           
-          <div className="h-6 w-px bg-gray-300 mx-1"></div>
+          <div className="h-6 w-px bg-border mx-1"></div>
           
           <button
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Fit to Screen"
           >
             <ArrowsPointingOutIcon className="w-4 h-4" />
           </button>
           
           <button
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            className="p-2 text-muted-foreground hover:bg-secondary rounded transition-colors"
             title="Grid View"
           >
             <Squares2X2Icon className="w-4 h-4" />

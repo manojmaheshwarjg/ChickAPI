@@ -57,7 +57,7 @@ export function WorkflowNode({ data, selected }: WorkflowNodeProps) {
 
   const getStatusColor = () => {
     switch (node.status) {
-      case 'running': return 'border-blue-500 animate-pulse'
+      case 'running': return 'border-blue-500 bg-blue-50/50'
       case 'success': return 'border-green-500'
       case 'error': return 'border-red-500'
       case 'warning': return 'border-yellow-500'

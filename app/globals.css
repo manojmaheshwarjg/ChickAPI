@@ -2,313 +2,154 @@
 @tailwind components;
 @tailwind utilities;
 
-/* React Flow Styles */
-@import 'reactflow/dist/style.css';
-
+/* Minimal Enterprise Design System */
 @layer base {
   :root {
-    --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
-    
-    /* shadcn/ui CSS Variables - Light mode */
+    /* Monotone color palette - Vercel/GitHub inspired */
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 0 0% 9%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 9%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 24 89% 50%;  /* Orange 500 */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 24 89% 50%;  /* Orange 500 */
-    --radius: 0.5rem;
+    --popover-foreground: 0 0% 9%;
+    
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
+    
+    --destructive: 0 0% 9%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 60%;
+    
+    --radius: 0.375rem;
   }
+}
 
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 24 89% 50%;  /* Orange 500 */
-    --primary-foreground: 240 10% 3.9%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 24 89% 50%;  /* Orange 500 */
-  }
-
+@layer base {
   * {
-    @apply border-gray-200;
+    @apply border-border;
   }
-
+  
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-white text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-
-  /* Custom scrollbar for enterprise look */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-gray-100;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 rounded;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-500;
+  
+  /* Clean, modern font stack */
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', sans-serif;
   }
 }
 
 @layer components {
-  /* Button styles */
-  .btn-primary {
-    @apply px-4 py-2 bg-orange-500 text-white font-medium rounded-md hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
-  }
-
-  .btn-secondary {
-    @apply px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-md hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
-  }
-
-  /* Input styles */
-  .input-field {
-    @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm
-           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500
-           placeholder-gray-400 transition-colors duration-200;
-  }
-
-  /* Panel styles */
-  .panel {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200;
-  }
-
-  .panel-header {
-    @apply px-4 py-3 border-b border-gray-200 flex items-center justify-between;
-  }
-
-  .panel-body {
-    @apply p-4;
-  }
-
-  /* Node styles */
-  .node-item {
-    @apply p-3 bg-white rounded-md border border-gray-200 hover:border-orange-400 
-           hover:shadow-md transition-all duration-200 cursor-move;
-  }
-
-  .node-category {
-    @apply mb-4;
-  }
-
-  .node-category-header {
-    @apply flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-gray-600 
-           uppercase tracking-wider hover:bg-gray-50 cursor-pointer rounded;
-  }
-
-  /* Sidebar styles */
-  .sidebar {
-    @apply bg-gray-50 border-r border-gray-200 h-full overflow-y-auto;
-  }
-
-  /* Toolbar styles */
-  .toolbar {
-    @apply bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-2;
-  }
-
-  .toolbar-btn {
-    @apply p-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors duration-200;
-  }
-
-  /* Canvas styles */
-  .canvas-container {
-    @apply bg-gray-50 relative overflow-hidden;
-    background-image: 
-      linear-gradient(to right, #f3f4f6 1px, transparent 1px),
-      linear-gradient(to bottom, #f3f4f6 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* Console styles */
-  .console {
-    @apply bg-gray-900 text-gray-100 font-mono text-xs;
-  }
-
-  .console-entry {
-    @apply px-3 py-1 hover:bg-gray-800 border-b border-gray-800;
-  }
-
-  /* Properties panel styles */
-  .property-group {
-    @apply mb-4 pb-4 border-b border-gray-200 last:border-0;
-  }
-
-  .property-label {
-    @apply text-xs font-medium text-gray-600 uppercase tracking-wider mb-1;
-  }
-
-  .property-value {
-    @apply text-sm text-gray-900;
-  }
-
-  /* Tab styles */
-  .tab-list {
-    @apply flex border-b border-gray-200;
-  }
-
-  .tab {
-    @apply px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 
-           border-b-2 border-transparent hover:border-gray-300 transition-colors duration-200;
-  }
-
-  .tab-active {
-    @apply text-orange-600 border-orange-600 hover:text-orange-600 hover:border-orange-600;
-  }
-
-  /* Badge styles */
-  .badge {
-    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
-  }
-
-  .badge-success {
-    @apply bg-green-100 text-green-800;
-  }
-
-  .badge-warning {
-    @apply bg-yellow-100 text-yellow-800;
-  }
-
-  .badge-error {
-    @apply bg-red-100 text-red-800;
-  }
-
-  .badge-info {
-    @apply bg-blue-100 text-blue-800;
-  }
-
-  /* Animated Connection Styles */
-  @keyframes flowAnimation {
-    0% { 
-      stroke-dashoffset: 12; 
-    }
-    100% { 
-      stroke-dashoffset: 0; 
-    }
+  /* Minimal shadows */
+  .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   }
   
-  @keyframes pulseFlow {
-    0%, 100% { 
-      opacity: 0.3; 
-      stroke-width: 2; 
-    }
-    50% { 
-      opacity: 0.8; 
-      stroke-width: 3; 
-    }
-  }
-
-
-  @keyframes particleFlow {
-    0% { 
-      opacity: 0; 
-      transform: scale(0.5); 
-    }
-    10%, 90% { 
-      opacity: 1; 
-      transform: scale(1); 
-    }
-    100% { 
-      opacity: 0; 
-      transform: scale(0.5); 
-    }
-  }
-
-  /* React Flow Edge Customization - Force immediate updates */
-  .react-flow__edge-path {
-    /* Remove ALL transitions for immediate path updates */
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  .react-flow__edge {
-    transition: none !important;
-  }
-  
-  /* Only transition stroke properties on hover, not position */
-  .react-flow__edge:hover .react-flow__edge-path {
-    transition: stroke 0.2s ease, stroke-width 0.2s ease;
-    stroke-width: 3;
-  }
-
-  /* Custom edge classes */
-  .edge-active {
-    stroke: #3b82f6;
-    stroke-dasharray: 8 4;
-    animation: flowAnimation 2s linear infinite;
-  }
-
-  .edge-success {
-    stroke: #10b981;
-  }
-
-  .edge-error {
-    stroke: #ef4444;
-    animation: pulseFlow 1s ease-in-out infinite;
-  }
-
-  .edge-idle {
-    stroke: #9ca3af;
-  }
-
-}
-
-@layer utilities {
-  /* Text selection */
-  .text-selection {
-    @apply selection:bg-orange-200 selection:text-orange-900;
-  }
-
-  /* Focus visible */
-  .focus-visible-ring {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2;
-  }
-
-  /* Transition */
-  .transition-base {
-    @apply transition-all duration-200 ease-in-out;
-  }
-
-  /* Shadow utilities */
-  .shadow-soft {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  }
-
-  .shadow-medium {
+  .shadow-md {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
-
-  .shadow-large {
+  
+  .shadow-lg {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
+  
+  /* Clean buttons */
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-all duration-200;
+    @apply active:scale-[0.98];
+  }
+  
+  .btn-primary {
+    @apply btn bg-black text-white hover:bg-gray-800;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-white text-black border border-gray-200 hover:bg-gray-50;
+  }
+  
+  .btn-ghost {
+    @apply btn bg-transparent text-gray-600 hover:text-black hover:bg-gray-50;
+  }
+  
+  /* Clean input fields */
+  .input {
+    @apply px-3 py-2 rounded-md bg-white border border-gray-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent;
+    @apply placeholder:text-gray-400;
+    @apply transition-all duration-200;
+  }
+  
+  /* Clean cards */
+  .card {
+    @apply bg-white rounded-lg p-6 border border-gray-200;
+    @apply hover:shadow-md transition-shadow duration-200;
+  }
+  
+  /* Minimal animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Minimal scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 80%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0 0% 70%);
+}
+
+/* React Flow Styles */
+@import 'reactflow/dist/style.css';
