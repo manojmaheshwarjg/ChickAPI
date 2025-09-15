@@ -79,7 +79,7 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
     switch (data.status) {
       case 'success': return 'border-green-400 bg-green-50'
       case 'error': return 'border-red-400 bg-red-50'
-      case 'running': return 'border-blue-400 bg-blue-50 animate-pulse'
+      case 'running': return 'border-blue-400 bg-blue-50'
       case 'warning': return 'border-yellow-400 bg-yellow-50'
       default: return 'border-border bg-card hover:border-primary hover:shadow-lg'
     }
@@ -95,21 +95,33 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
       <Handle
         type="target"
         position={Position.Left}
-        className="w-3 h-3 border-2 border-white"
+        className="w-4 h-4 border-2 border-white shadow-lg"
         style={{ 
           background: getNodeColor(),
-          left: -6
+          left: -8,
+          zIndex: 10
         }}
+        isConnectable={true}
+        id="input"
       />
 
       {/* Main Node Card */}
       <Card
-        className={`w-80 transition-all duration-300 cursor-pointer group ${getStatusColor()}`}
+        className={`w-80 transition-all duration-200 cursor-grab active:cursor-grabbing group ${getStatusColor()}`}
         style={{ 
           transform: selected ? 'scale(1.02)' : 'scale(1)',
-          boxShadow: selected ? '0 10px 25px rgba(0, 0, 0, 0.1)' : undefined
+          boxShadow: selected ? '0 10px 25px rgba(0, 0, 0, 0.1)' : undefined,
+          userSelect: 'none' // Prevent text selection during drag
         }}
-        onClick={handleNodeClick}
+        onMouseDown={(e) => {
+          // Allow dragging to work properly
+          e.stopPropagation()
+        }}
+        onClick={(e) => {
+          // Only handle click if not dragging
+          e.stopPropagation()
+          handleNodeClick()
+        }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -160,7 +172,7 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-6 px-2 text-xs"
+                  className="h-6 px-2 text-xs nodrag"
                   onClick={(e) => {
                     e.stopPropagation()
                     setShowPreview(!showPreview)
@@ -214,7 +226,7 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
                 {data.suggestions.slice(0, 2).map((suggestion, i) => (
                   <button
                     key={i}
-                    className="w-full text-left px-2 py-1.5 text-xs bg-white/80 hover:bg-white border border-purple-200 hover:border-purple-300 rounded transition-all"
+                    className="w-full text-left px-2 py-1.5 text-xs bg-white/80 hover:bg-white border border-purple-200 hover:border-purple-300 rounded transition-all nodrag"
                     onClick={(e) => {
                       e.stopPropagation()
                       data.onSuggestionClick?.(suggestion)
@@ -238,7 +250,7 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="flex-1 gap-2 h-8 text-xs"
+                className="flex-1 gap-2 h-8 text-xs nodrag"
                 onClick={(e) => {
                   e.stopPropagation()
                   data.onPreview?.(data)
@@ -250,7 +262,7 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="flex-1 gap-2 h-8 text-xs"
+                className="flex-1 gap-2 h-8 text-xs nodrag"
                 onClick={(e) => {
                   e.stopPropagation()
                   setShowSuggestions(!showSuggestions)
@@ -263,9 +275,20 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
           )}
         </CardContent>
 
-        {/* Running animation overlay */}
+        {/* Running animation overlay - smooth gradient sweep */}
         {data.status === 'running' && (
-          <div className="absolute inset-0 bg-blue-500/5 rounded-lg animate-pulse pointer-events-none" />
+          <div className="absolute inset-0 rounded-lg pointer-events-none overflow-hidden">
+            {/* Base subtle background */}
+            <div className="absolute inset-0 bg-blue-500/5 rounded-lg" />
+            {/* Animated sweep effect */}
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent rounded-lg"
+              style={{
+                animation: 'sweep 2s ease-in-out infinite',
+                transform: 'translateX(-100%)'
+              }}
+            />
+          </div>
         )}
       </Card>
 
@@ -273,11 +296,14 @@ export function IntelligentWorkflowNode({ data, selected }: IntelligentWorkflowN
       <Handle
         type="source"
         position={Position.Right}
-        className="w-3 h-3 border-2 border-white"
+        className="w-4 h-4 border-2 border-white shadow-lg"
         style={{ 
           background: getNodeColor(),
-          right: -6
+          right: -8,
+          zIndex: 10
         }}
+        isConnectable={true}
+        id="output"
       />
     </>
   )

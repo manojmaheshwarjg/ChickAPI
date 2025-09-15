@@ -8,9 +8,12 @@ import {
   Radio, Shuffle, Code, Mail, FileText,
   Hash, Upload, Activity, Eye, RotateCcw,
   ArrowRight, Filter as FilterIcon, Merge, Settings2,
-  Server, Boxes, Key
+  Server, Boxes, Key, Sparkles
 } from 'lucide-react'
-import { Input, Button, Badge } from '@/components/ui'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
 import { 
   nodes, 
   categoryMetadata, 
@@ -154,10 +157,11 @@ export function NodePalette({
     onNodeSelect?.(node)
   }
 
-  // Node component (single column list format)
+  // Enterprise Node Item Component
   const NodeItem = ({ node }: { node: NodePaletteItem }) => {
     const isFavorite = favorites.includes(node.id)
     const isRecent = recentlyUsed.includes(node.id)
+    const [isHovered, setIsHovered] = useState(false)
 
     return (
       <div
@@ -165,32 +169,68 @@ export function NodePalette({
         draggable={true}
         onDragStart={(e) => handleDragStart(e, node)}
         onClick={(e) => {
-          // Only handle click if it wasn't a drag operation
           if (!e.defaultPrevented) {
             handleNodeClick(node)
           }
         }}
-        className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 cursor-grab active:cursor-grabbing transition-all group"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`
+          relative bg-white border border-gray-200 rounded-lg
+          cursor-grab active:cursor-grabbing
+          hover:border-blue-400 hover:shadow-md
+          transition-all duration-200
+          ${isHovered ? 'transform scale-[1.02]' : ''}
+        `}
         style={{ 
           userSelect: 'none',
           WebkitUserDrag: 'element'
         }}
       >
-        <div 
-          className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
-          style={{ backgroundColor: node.color + '20', color: node.color }}
-        >
-          {getNodeIcon(node.id)}
-        </div>
-        
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="font-medium text-gray-900 truncate">{node.name}</h3>
-            {isFavorite && <Star className="w-4 h-4 text-yellow-500 fill-current" />}
-            {isRecent && <Clock className="w-4 h-4 text-blue-500" />}
-            {node.premium && <Zap className="w-4 h-4 text-purple-500" />}
+        <div className="p-3">
+          <div className="flex items-center gap-3">
+            <div 
+              className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ 
+                background: `linear-gradient(135deg, ${node.color}15, ${node.color}25)`,
+                color: node.color 
+              }}
+            >
+              {getNodeIcon(node.id)}
+            </div>
+            
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium text-gray-900 text-sm truncate">
+                  {node.name}
+                </h3>
+                <div className="flex items-center gap-1 ml-2">
+                  {isFavorite && <Star className="w-3 h-3 text-yellow-500 fill-current" />}
+                  {node.premium && (
+                    <Badge className="text-xs px-1.5 py-0 bg-gradient-to-r from-purple-500 to-purple-600 text-white border-0">
+                      PRO
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5 truncate">
+                {node.description}
+              </p>
+            </div>
           </div>
-          <p className="text-sm text-gray-600 truncate">{node.description}</p>
+          
+          {/* Quick Info Bar */}
+          {isHovered && (
+            <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
+              <span className="text-gray-500">Click to add • Drag to place</span>
+              {isRecent && (
+                <span className="text-blue-600 flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  Recently used
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     )
@@ -198,68 +238,83 @@ export function NodePalette({
 
   return (
     <div 
-      className={`flex flex-col h-full bg-white ${className}`}
+      className={`flex flex-col h-full bg-white border-r border-gray-200 ${className}`}
       style={{ touchAction: 'none', userSelect: 'none' }}
     >
-      {/* Header */}
-      <div className="flex-shrink-0 p-4 border-b border-gray-200">
-        <div className="flex items-center gap-2 mb-4">
-          <Package className="w-5 h-5 text-gray-600" />
-          <h2 className="text-lg font-semibold text-gray-900">Node Palette</h2>
-          <Badge variant="secondary" className="ml-auto">
-            {filteredNodes.length} nodes
-          </Badge>
+      {/* Enterprise Header */}
+      <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Component Library</h2>
+          <p className="text-sm text-gray-600 mt-1">Drag components to build your workflow</p>
         </div>
 
-        {/* Search */}
+        {/* Search with Filter */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
           <Input
-            placeholder="Search nodes..."
+            placeholder="Search components..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-10 pr-20 bg-white border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           />
+          <Badge 
+            variant="secondary" 
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-100 text-blue-700"
+          >
+            {filteredNodes.length} items
+          </Badge>
         </div>
-
       </div>
 
-      {/* Node List with Collapsible Categories */}
-      <div className="flex-1 overflow-y-auto" style={{ touchAction: 'none' }}>
+      {/* Node List with Categories */}
+      <div className="flex-1 overflow-y-auto bg-gray-50" style={{ touchAction: 'none' }}>
         {Object.entries(groupedNodes).map(([categoryName, categoryNodes]) => {
           const isExpanded = expandedCategories.has(categoryName.toLowerCase())
           const categoryKey = categoryName.toLowerCase()
           
+          // Get category color
+          const categoryColor = categoryNodes[0]?.color || '#6b7280'
+          
           return (
-            <div key={categoryName} className="border-b border-gray-100">
-              {/* Collapsible Category Header */}
+            <div key={categoryName} className="bg-white mb-px">
+              {/* Category Header */}
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   toggleCategory(categoryKey)
                 }}
-                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
-                style={{ touchAction: 'manipulation' }}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors border-l-4"
+                style={{ 
+                  touchAction: 'manipulation',
+                  borderLeftColor: categoryColor
+                }}
               >
-                <div className="flex items-center gap-2">
-                  {isExpanded ? (
-                    <ChevronDown className="w-4 h-4 text-gray-500" />
-                  ) : (
-                    <ChevronRight className="w-4 h-4 text-gray-500" />
-                  )}
-                  <h3 className="font-semibold text-gray-900">{categoryName}</h3>
-                  <Badge variant="outline" className="text-xs ml-2">
-                    {categoryNodes.length}
+                <div className="flex items-center gap-3">
+                  <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${
+                    isExpanded ? 'rotate-90' : ''
+                  }`} />
+                  <h3 className="font-semibold text-gray-900 text-sm uppercase tracking-wider">
+                    {categoryName}
+                  </h3>
+                  <Badge 
+                    variant="secondary" 
+                    className="text-xs bg-gray-100 text-gray-700"
+                  >
+                    {categoryNodes.length} components
                   </Badge>
                 </div>
               </button>
 
-              {/* Collapsible Category Content */}
+              {/* Category Content */}
               {isExpanded && (
-                <div className="px-4 pb-4 space-y-2">
-                  {categoryNodes.map(node => (
-                    <NodeItem key={node.id} node={node} />
-                  ))}
+                <div className="px-4 py-3 bg-gray-50 border-l-4" 
+                  style={{ borderLeftColor: `${categoryColor}20` }}
+                >
+                  <div className="space-y-2">
+                    {categoryNodes.map(node => (
+                      <NodeItem key={node.id} node={node} />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

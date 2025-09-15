@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
 import { Progress } from '@/components/ui/progress'
 
@@ -48,7 +48,7 @@ export function NodeDetailModal({ node, open, onClose, onUseNode, onAddToFavorit
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <h2 className="text-2xl font-bold">{node.name}</h2>
+                      <DialogTitle className="text-2xl font-bold">{node.name}</DialogTitle>
                       {node.premium && <Zap className="w-5 h-5 text-yellow-500" />}
                       {node.beta && <Badge variant="outline">Beta</Badge>}
                     </div>

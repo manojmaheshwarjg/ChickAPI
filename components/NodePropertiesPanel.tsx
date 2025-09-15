@@ -28,7 +28,6 @@ import {
   Textarea,
   Switch,
   Select,
-  Checkbox,
   Tabs,
   Label,
   Separator
@@ -280,10 +279,12 @@ export function NodePropertiesPanel({
           <div className="space-y-2">
             {prop.options?.map(option => (
               <div key={String(option.value)} className="flex items-center space-x-2">
-                <Checkbox
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 text-primary bg-background border-border rounded focus:ring-primary focus:ring-2"
                   checked={selectedValues.includes(option.value)}
-                  onCheckedChange={(checked) => {
-                    const newValues = checked
+                  onChange={(e) => {
+                    const newValues = e.target.checked
                       ? [...selectedValues, option.value]
                       : selectedValues.filter(v => v !== option.value)
                     handlePropertyChange(prop, newValues)

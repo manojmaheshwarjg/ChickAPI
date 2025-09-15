@@ -22,8 +22,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css'
 
 import { 
-  Sparkles, Play, Pause, Brain, TrendingUp, 
-  Users, Target, Lightbulb, ArrowRight, Zap
+  Sparkles, Play, Pause, ArrowRight, Zap, X, Users, Lightbulb
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -101,7 +100,7 @@ function IntelligentReactFlowCanvasInner({
     return steps.map((step, index) => ({
       id: step.id,
       type: 'intelligent',
-      position: { x: 100 + index * 400, y: 100 + (index % 3) * 200 }, // Smart auto-layout
+      position: step.position || { x: 100 + index * 400, y: 100 + (index % 3) * 200 }, // Use saved position or auto-layout
       data: {
         ...step,
         onSelect: (nodeData: any) => {
@@ -154,9 +153,19 @@ function IntelligentReactFlowCanvasInner({
     convertToReactFlowEdges(workflow.connections)
   )
 
-  // Update nodes when workflow changes
+  // Update nodes when workflow changes, but preserve positions
   useEffect(() => {
-    setNodes(convertToReactFlowNodes(workflow.steps))
+    setNodes((currentNodes) => {
+      const newNodes = convertToReactFlowNodes(workflow.steps)
+      
+      // Preserve current positions for existing nodes
+      return newNodes.map(newNode => {
+        const existingNode = currentNodes.find(n => n.id === newNode.id)
+        return existingNode 
+          ? { ...newNode, position: existingNode.position } // Keep current position
+          : newNode // Use default/saved position for new nodes
+      })
+    })
   }, [workflow.steps, convertToReactFlowNodes, setNodes])
 
   // Update edges when connections change
@@ -164,39 +173,84 @@ function IntelligentReactFlowCanvasInner({
     setEdges(convertToReactFlowEdges(workflow.connections))
   }, [workflow.connections, convertToReactFlowEdges, setEdges])
 
-  // Handle new connections
+  // Handle new connections with animated bezier curves
   const onConnect: OnConnect = useCallback((params) => {
+    console.log('🔗 Connection attempt:', params)
+    
+    if (!params.source || !params.target) {
+      console.warn('❌ Connection failed: missing source or target')
+      return
+    }
+    
     const newConnection = {
       id: `edge-${Date.now()}`,
-      source: params.source!,
-      target: params.target!,
-      status: 'idle' as const,
+      source: params.source,
+      target: params.target,
+      status: 'active' as const,
       label: 'data flow',
     }
     
-    onConnectionAdd?.(newConnection)
-    setEdges((eds) => addEdge({
+    console.log('✅ Creating connection:', newConnection)
+    
+    // Create the edge with intelligent type and animation
+    const newEdge = {
       ...params,
       id: newConnection.id,
       type: 'intelligent',
+      animated: true,
+      style: { 
+        strokeWidth: 2,
+        stroke: 'hsl(var(--primary))'
+      },
       data: {
         label: newConnection.label,
         status: newConnection.status,
+        animated: true,
         onDelete: onConnectionDelete,
+        successRate: 95.8,
+        avgResponseTime: 124
       }
-    }, eds))
+    }
+    
+    onConnectionAdd?.(newConnection)
+    setEdges((eds) => addEdge(newEdge, eds))
   }, [onConnectionAdd, onConnectionDelete, setEdges])
 
-  // Handle node drag end - update position
+  // Handle real-time node drag for smooth updates
+  const onNodeDrag = useCallback((event: React.MouseEvent, node: Node) => {
+    // Update node position in real-time for smooth dragging
+    setNodes((nds) => 
+      nds.map((n) => 
+        n.id === node.id 
+          ? { ...n, position: node.position }
+          : n
+      )
+    )
+  }, [setNodes])
+
+  // Handle node drag end - update position and persist
   const onNodeDragStop = useCallback((event: any, node: Node) => {
+    console.log('🎯 Node drag stopped:', node.id, 'at position:', node.position)
+    
+    // Immediately update the node position in local state
+    setNodes((nds) => 
+      nds.map((n) => 
+        n.id === node.id 
+          ? { ...n, position: node.position }
+          : n
+      )
+    )
+    
+    // Persist to workflow state (this will trigger useEffect, but position will be preserved)
     const step = workflow.steps.find(s => s.id === node.id)
-    if (step) {
+    if (step && onStepUpdate) {
       onStepUpdate({
         ...step,
-        // Update position if needed for persistence
+        position: node.position // Persist the new position
       })
+      console.log('✅ Position saved to workflow:', node.position)
     }
-  }, [workflow.steps, onStepUpdate])
+  }, [workflow.steps, onStepUpdate, setNodes])
 
   // Handle drop from node palette
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -210,16 +264,31 @@ function IntelligentReactFlowCanvasInner({
   }, [])
 
   const onDrop = useCallback((event: React.DragEvent) => {
+    console.log('🎯 Drop event fired!')
     event.preventDefault()
     setIsDraggingOver(false)
 
-    const nodeType = event.dataTransfer.getData('nodeType')
-    if (!nodeType || !reactFlowInstance) return
+    console.log('📦 Available drop types:', Array.from(event.dataTransfer.types || []))
+    
+    const nodeType = 
+      event.dataTransfer.getData('nodeType') ||
+      event.dataTransfer.getData('application/reactflow') ||
+      event.dataTransfer.getData('text/plain')
+    
+    console.log('🎯 Extracted nodeType:', nodeType)
+    
+    if (!nodeType || !reactFlowInstance) {
+      console.warn('❌ Drop ignored: missing nodeType or reactFlowInstance')
+      return
+    }
 
     const position = reactFlowInstance.screenToFlowPosition({
       x: event.clientX,
       y: event.clientY,
     })
+
+    console.log('🎯 Drop position:', position)
+    console.log('🎯 Calling onStepAdd with:', nodeType, position)
 
     onStepAdd(nodeType, position)
   }, [onStepAdd, reactFlowInstance])
@@ -300,13 +369,22 @@ function IntelligentReactFlowCanvasInner({
   }, [workflow.steps])
 
   return (
-    <div className="w-full h-full relative bg-gradient-to-br from-background via-background to-muted/20">
+    <div 
+      className="w-full h-full relative bg-gradient-to-br from-background via-background to-muted/20"
+      style={{ 
+        WebkitUserSelect: 'none',
+        MozUserSelect: 'none',
+        msUserSelect: 'none',
+        userSelect: 'none'
+      }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
@@ -314,13 +392,25 @@ function IntelligentReactFlowCanvasInner({
         nodeTypes={nodeTypes}
         edgeTypes={intelligentEdgeTypes}
         connectionMode={ConnectionMode.Loose}
+        connectOnClick={true}
+        defaultEdgeOptions={{
+          type: 'intelligent',
+          animated: true,
+          style: { strokeWidth: 2, stroke: 'hsl(var(--primary))' },
+          data: { animated: true, status: 'active' }
+        }}
+        deleteKeyCode={["Backspace", "Delete"]}
+        elevateEdgesOnSelect={true}
         fitView
-        snapToGrid={false}
-        snapGrid={[20, 20]}
+        snapToGrid={true}
+        snapGrid={[15, 15]}
         defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
         minZoom={0.3}
         maxZoom={1.5}
         className={isDraggingOver ? 'ring-2 ring-primary ring-opacity-50' : ''}
+        nodesDraggable={true}
+        nodesConnectable={true}
+        elementsSelectable={true}
       >
         {/* Intelligent Background */}
         <Background 
@@ -391,93 +481,9 @@ function IntelligentReactFlowCanvasInner({
             </div>
           </Card>
 
-          {/* AI Assistant Toggle */}
-          <Card className="px-4 py-3 shadow-lg">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="gap-2 text-primary"
-              onClick={() => setShowAIAssistant(!showAIAssistant)}
-            >
-              <Brain className="w-4 h-4" />
-              AI Assistant
-              <Badge variant="secondary" className="text-xs">Beta</Badge>
-            </Button>
-          </Card>
         </Panel>
 
-        {/* Workflow Health Dashboard */}
-        <Panel position="top-right">
-          <Card className="p-4 w-64 shadow-lg">
-            <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="w-4 h-4 text-green-500" />
-              <span className="font-semibold text-sm">Workflow Health</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div>
-                <div className="text-2xl font-bold text-green-600">
-                  {workflowHealth.successRate}%
-                </div>
-                <div className="text-muted-foreground">Success Rate</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold">
-                  {workflowHealth.avgTime}ms
-                </div>
-                <div className="text-muted-foreground">Avg Runtime</div>
-              </div>
-            </div>
-            
-            {/* Workflow progress */}
-            {isRunning && (
-              <div className="mt-3 pt-3 border-t border-border">
-                <div className="flex items-center gap-2 text-xs text-blue-600">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                  <span>Running step {Math.min(3, workflow.steps.length)} of {workflow.steps.length}</span>
-                </div>
-                <div className="w-full bg-muted rounded-full h-1.5 mt-1">
-                  <div 
-                    className="bg-blue-500 h-1.5 rounded-full transition-all duration-1000"
-                    style={{ width: '60%' }}
-                  />
-                </div>
-              </div>
-            )}
-          </Card>
-        </Panel>
 
-        {/* AI Assistant Panel */}
-        {showAIAssistant && (
-          <Panel position="top-center">
-            <Card className="p-4 max-w-md shadow-lg">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm">AI Workflow Assistant</h4>
-                  <p className="text-xs text-muted-foreground mt-1 mb-3">
-                    I can help optimize your workflow and suggest improvements
-                  </p>
-                  <div className="space-y-2">
-                    {getSmartSuggestions().slice(0, 2).map((suggestion, i) => (
-                      <Button
-                        key={i}
-                        variant="outline"
-                        size="sm"
-                        className="w-full justify-start text-xs h-8"
-                        onClick={() => handleAISuggestion(suggestion, workflow.steps[0] || {} as WorkflowStep)}
-                      >
-                        <ArrowRight className="w-3 h-3 mr-2" />
-                        {suggestion}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Panel>
-        )}
 
         {/* Empty State */}
         {workflow.steps.length === 0 && (

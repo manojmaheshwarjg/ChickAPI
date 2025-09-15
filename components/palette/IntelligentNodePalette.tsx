@@ -83,7 +83,7 @@ const mockNodes: EnhancedNodeDefinition[] = [
     description: 'Send HTTP requests to any endpoint',
     longDescription: 'The most popular node for API testing. Supports all HTTP methods, headers, authentication, and response validation. Perfect for REST API integration.',
     icon: <Globe className="w-5 h-5" />,
-    color: '#3b82f6',
+    color: 'hsl(var(--primary))',
     complexity: 'beginner',
     inputs: [
       { name: 'URL', type: 'string', required: true, description: 'The endpoint URL' },
@@ -290,174 +290,288 @@ export function IntelligentNodePalette({ onNodeSelect, onNodeDrag, className }: 
     }))
   }, [])
 
+  // Handle node drag start
+  const handleDragStart = (e: React.DragEvent, node: EnhancedNodeDefinition) => {
+    console.log('🎯 Drag started:', node.id, node.name)
+    
+    // Set data for drop handling
+    e.dataTransfer.setData('nodeType', node.id)
+    e.dataTransfer.setData('application/reactflow', node.id)
+    e.dataTransfer.setData('text/plain', node.id)
+    e.dataTransfer.setData('application/json', JSON.stringify(node))
+    e.dataTransfer.effectAllowed = 'copy'
+    e.dataTransfer.dropEffect = 'copy'
+    
+    console.log('📦 DataTransfer types set:', Array.from(e.dataTransfer.types))
+    
+    onNodeDrag?.(node)
+  }
+
   // Rich Node Card Component
   const NodeCard = ({ node, compact = false }: { node: EnhancedNodeDefinition; compact?: boolean }) => {
     const [isHovered, setIsHovered] = useState(false)
+    const [isExpanded, setIsExpanded] = useState(false)
 
     if (compact) {
       return (
-        <div
-          className="flex items-center gap-3 p-3 bg-card border border-border rounded-lg hover:shadow-md transition-all cursor-pointer group"
-          draggable
-          onDragStart={() => onNodeDrag(node)}
-          onClick={() => setSelectedNode(node)}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div 
-            className="w-10 h-10 rounded-lg flex items-center justify-center text-white"
-            style={{ backgroundColor: node.color }}
+        <>
+          <div
+            className="group relative p-4 border border-border/60 rounded-lg bg-white hover:bg-gray-50/80 hover:border-border hover:shadow-sm transition-all duration-200 cursor-grab active:cursor-grabbing"
+            style={{
+              userSelect: 'none',
+              WebkitUserDrag: 'element',
+              backgroundImage: `
+                radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.15) 1px, transparent 0)
+              `,
+              backgroundSize: '20px 20px'
+            }}
+            draggable
+            onDragStart={(e) => handleDragStart(e, node)}
+            onClick={() => setSelectedNode(node)}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
           >
-            {node.icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold truncate">{node.name}</h3>
-              {node.premium && <Zap className="w-4 h-4 text-yellow-500" />}
-              {node.beta && <Badge variant="secondary" className="text-xs">Beta</Badge>}
+            <div className="flex items-start gap-3">
+              <div 
+                className="flex-shrink-0 w-6 h-6 rounded-md bg-gray-100 flex items-center justify-center"
+                style={{
+                  backgroundImage: `
+                    radial-gradient(circle at 2px 2px, rgba(156, 163, 175, 0.2) 0.5px, transparent 0)
+                  `,
+                  backgroundSize: '8px 8px'
+                }}
+              >
+                {React.cloneElement(node.icon as React.ReactElement, {
+                  className: 'w-3.5 h-3.5 text-gray-600'
+                })}
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-sm text-gray-900 truncate">{node.name}</h3>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setIsExpanded(!isExpanded)
+                    }}
+                    className="flex-shrink-0 p-1 hover:bg-gray-100 rounded transition-colors"
+                  >
+                    <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                  </button>
+                </div>
+                
+                <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">{node.description}</p>
+                
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                    {node.category}
+                  </span>
+                  {node.analytics.rating >= 4.5 && (
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs font-medium text-gray-600">{node.analytics.rating}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground truncate">{node.description}</p>
           </div>
-          <div className="text-right">
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <TrendingUp className="w-3 h-3" />
-              {node.analytics.popularity}%
+          
+          {/* Expandable content */}
+          {isExpanded && (
+            <div 
+              className="ml-9 mt-2 p-3 bg-gray-50 rounded-md border-l-2 border-gray-200"
+              style={{
+                backgroundImage: `
+                  linear-gradient(45deg, rgba(156, 163, 175, 0.03) 25%, transparent 25%),
+                  linear-gradient(-45deg, rgba(156, 163, 175, 0.03) 25%, transparent 25%),
+                  linear-gradient(45deg, transparent 75%, rgba(156, 163, 175, 0.03) 75%),
+                  linear-gradient(-45deg, transparent 75%, rgba(156, 163, 175, 0.03) 75%)
+                `,
+                backgroundSize: '8px 8px',
+                backgroundPosition: '0 0, 0 4px, 4px -4px, -4px 0px'
+              }}
+            >
+              <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
+                <span>Inputs: {node.inputs.length}</span>
+                <span>Outputs: {node.outputs.length}</span>
+                <span className="text-gray-500">{node.complexity}</span>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {node.tags.slice(0, 3).map(tag => (
+                  <span key={tag} className="inline-block px-1.5 py-0.5 bg-white rounded text-xs text-gray-600 border">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="text-xs text-green-600 font-medium">
-              {node.analytics.successRate}% success
-            </div>
-          </div>
-        </div>
+          )}
+        </>
       )
     }
 
     return (
-      <Card 
-        className="group cursor-pointer hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+      <div
+        className="group relative border border-gray-200 rounded-lg bg-white hover:bg-gray-50/50 hover:border-gray-300 hover:shadow-sm transition-all duration-200 cursor-grab active:cursor-grabbing"
+        style={{
+          userSelect: 'none',
+          WebkitUserDrag: 'element',
+          backgroundImage: `
+            radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.1) 1px, transparent 0)
+          `,
+          backgroundSize: '24px 24px'
+        }}
         draggable
-        onDragStart={() => onNodeDrag(node)}
+        onDragStart={(e) => handleDragStart(e, node)}
         onClick={() => setSelectedNode(node)}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div 
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-sm"
-              style={{ backgroundColor: node.color }}
-            >
-              {node.icon}
-            </div>
-            <div className="flex flex-col gap-1">
-              {node.premium && <Zap className="w-4 h-4 text-yellow-500" />}
-              {node.beta && <Badge variant="outline" className="text-xs px-1">Beta</Badge>}
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Star className="w-3 h-3 fill-current text-yellow-400" />
-                {node.analytics.rating}
+        {/* Header */}
+        <div className="p-4 pb-3">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-start gap-3">
+              <div 
+                className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"
+                style={{
+                  backgroundImage: `
+                    radial-gradient(circle at 2px 2px, rgba(156, 163, 175, 0.15) 0.5px, transparent 0)
+                  `,
+                  backgroundSize: '10px 10px'
+                }}
+              >
+                {React.cloneElement(node.icon as React.ReactElement, {
+                  className: 'w-4 h-4 text-gray-600'
+                })}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold text-base text-gray-900 mb-1">{node.name}</h3>
+                <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">{node.description}</p>
               </div>
             </div>
+            
+            <div className="flex flex-col items-end gap-2">
+              {node.premium && (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                  <Zap className="w-3 h-3 mr-1" />
+                  Pro
+                </span>
+              )}
+              {node.beta && (
+                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  Beta
+                </span>
+              )}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setIsExpanded(!isExpanded)
+                }}
+                className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+              </button>
+            </div>
           </div>
           
-          <div>
-            <h3 className="font-semibold text-lg leading-tight">{node.name}</h3>
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{node.description}</p>
-          </div>
-          
-          {/* Complexity & Category */}
-          <div className="flex items-center gap-2 mt-2">
-            <Badge 
-              variant={node.complexity === 'beginner' ? 'default' : node.complexity === 'intermediate' ? 'secondary' : 'outline'}
-              className="text-xs"
-            >
+          <div className="flex items-center gap-2 mb-3">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
+              {node.category}
+            </span>
+            <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+              node.complexity === 'beginner' ? 'bg-green-100 text-green-800' :
+              node.complexity === 'intermediate' ? 'bg-yellow-100 text-yellow-800' :
+              'bg-red-100 text-red-800'
+            }`}>
               {node.complexity}
-            </Badge>
-            <span className="text-xs text-muted-foreground">{node.category}</span>
-          </div>
-        </CardHeader>
-
-        <CardContent className="pt-0">
-          {/* Analytics Bar */}
-          <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="text-center">
-              <div className="text-sm font-bold text-green-600">{node.analytics.successRate}%</div>
-              <div className="text-xs text-muted-foreground">Success</div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-bold">{node.analytics.avgResponseTime}ms</div>
-              <div className="text-xs text-muted-foreground">Avg Time</div>
-            </div>
-            <div className="text-center">
-              <div className="text-sm font-bold text-blue-600">{node.analytics.weeklyUse.toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">Uses/week</div>
-            </div>
-          </div>
-
-          {/* Quick Preview */}
-          {isHovered && node.examples.length > 0 && (
-            <div className="bg-muted/50 rounded-lg p-3 mb-3">
-              <div className="flex items-center gap-2 mb-2">
-                <Eye className="w-4 h-4 text-primary" />
-                <span className="text-xs font-medium">Quick Preview</span>
+            </span>
+            {node.analytics.rating >= 4.5 && (
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                <span className="text-xs font-medium text-gray-600">{node.analytics.rating}</span>
               </div>
-              <div className="text-xs font-mono bg-background rounded px-2 py-1">
-                {node.examples[0].preview}
-              </div>
-            </div>
-          )}
-
-          {/* Input/Output Summary */}
-          <div className="flex justify-between text-xs text-muted-foreground mb-3">
-            <span>{node.inputs.length} inputs</span>
-            <span>{node.outputs.length} outputs</span>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1 mb-3">
-            {node.tags.slice(0, 3).map(tag => (
-              <Badge key={tag} variant="outline" className="text-xs px-2 py-0">
-                {tag}
-              </Badge>
-            ))}
-            {node.tags.length > 3 && (
-              <Badge variant="outline" className="text-xs px-2 py-0">
-                +{node.tags.length - 3}
-              </Badge>
             )}
           </div>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-2">
-            <Button 
-              size="sm" 
-              variant="outline" 
-              className="flex-1 gap-2"
-              onClick={(e) => {
-                e.stopPropagation()
-                setShowPreview(node.id)
-              }}
-            >
-              <Eye className="w-4 h-4" />
-              Preview
-            </Button>
-            <Button 
-              size="sm" 
-              className="flex-1 gap-2"
-              onClick={(e) => {
-                e.stopPropagation()
-                onNodeSelect(node)
-              }}
-            >
-              <Play className="w-4 h-4" />
-              Use
-            </Button>
+        {/* Action Button */}
+        <div className="px-4 pb-4">
+          <Button 
+            size="sm" 
+            className="w-full h-9 bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-800 font-medium transition-colors"
+            onClick={(e) => {
+              e.stopPropagation()
+              onNodeSelect(node)
+            }}
+          >
+            <Play className="w-4 h-4 mr-2" />
+            Add to Canvas
+          </Button>
+        </div>
+        
+        {/* Expandable Content */}
+        {isExpanded && (
+          <div 
+            className="border-t border-gray-200 p-4 bg-gray-50/50"
+            style={{
+              backgroundImage: `
+                linear-gradient(45deg, rgba(156, 163, 175, 0.025) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(156, 163, 175, 0.025) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(156, 163, 175, 0.025) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(156, 163, 175, 0.025) 75%)
+              `,
+              backgroundSize: '12px 12px',
+              backgroundPosition: '0 0, 0 6px, 6px -6px, -6px 0px'
+            }}
+          >
+            <div className="space-y-4">
+              {/* Quick Stats */}
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-lg font-semibold text-green-600">{node.analytics.successRate}%</div>
+                  <div className="text-xs text-gray-500">Success</div>
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-blue-600">{node.analytics.avgResponseTime}ms</div>
+                  <div className="text-xs text-gray-500">Response</div>
+                </div>
+                <div>
+                  <div className="text-lg font-semibold text-purple-600">{node.analytics.weeklyUse}</div>
+                  <div className="text-xs text-gray-500">Uses/week</div>
+                </div>
+              </div>
+              
+              {/* I/O Info */}
+              <div className="flex justify-between items-center text-sm text-gray-600">
+                <span>{node.inputs.length} inputs</span>
+                <span>{node.outputs.length} outputs</span>
+              </div>
+              
+              {/* Tags */}
+              <div className="flex flex-wrap gap-1.5">
+                {node.tags.slice(0, 4).map(tag => (
+                  <span key={tag} className="inline-block px-2 py-1 bg-white rounded text-xs text-gray-600 border border-gray-200">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        )}
+      </div>
     )
   }
 
   return (
-    <div className={`flex flex-col h-full bg-background ${className}`}>
+    <div 
+      className={`flex flex-col h-full bg-background ${className}`}
+      style={{
+        backgroundImage: `
+          radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.08) 1px, transparent 0)
+        `,
+        backgroundSize: '32px 32px'
+      }}
+    >
       {/* Header with Smart Search */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2 mb-4">
@@ -473,6 +587,7 @@ export function IntelligentNodePalette({ onNodeSelect, onNodeDrag, className }: 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
+            autoComplete="off"
           />
         </div>
 
