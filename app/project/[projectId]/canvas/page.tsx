@@ -3,21 +3,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { 
-  Play, Pause, Settings, CheckCircle,
-  MoreVertical, Save, Share2, Download, GitBranch,
-  Clock, Users, Activity, Layers, Zap, FileJson,
-  AlertCircle, ChevronRight, Home, FolderOpen,
-  Box, Grid3x3
-} from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { AdvancedCanvasProvider, useAdvancedCanvas } from '@/components/advanced-canvas/AdvancedCanvasContext'
 import { AdvancedCanvasLayout } from '@/components/advanced-canvas/AdvancedCanvasLayout'
 import Link from 'next/link'
@@ -70,203 +55,142 @@ function AdvancedCanvasWithHeader() {
   }, [state.nodes, actions])
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="h-screen flex flex-col bg-gray-50">
       {/* Enterprise Header */}
-      <header className="bg-white border-b border-gray-200 shadow-sm">
+      <header className="bg-white border-b border-gray-300">
         {/* Top Navigation Bar */}
-        <div className="px-6 py-3 border-b border-gray-100">
+        <div className="px-8 py-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               {/* Workspace Selector */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2 font-medium">
-                    <Grid3x3 className="w-4 h-4" />
-                    My Workspace
-                    <ChevronRight className="w-3 h-3 rotate-90" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64">
-                  <DropdownMenuItem className="gap-2">
-                    <Home className="w-4 h-4" />
-                    <div>
-                      <div className="font-medium">My Workspace</div>
-                      <div className="text-xs text-gray-500">Personal projects</div>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2">
-                    <FolderOpen className="w-4 h-4" />
-                    <div>
-                      <div className="font-medium">Team Projects</div>
-                      <div className="text-xs text-gray-500">Shared workflows</div>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="gap-2">
-                    <Box className="w-4 h-4" />
-                    <span>All Projects</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-gray-100 flex items-center justify-center font-bold text-gray-700 text-sm">
+                  WS
+                </div>
+                <div>
+                  <div className="font-medium text-gray-900">My Workspace</div>
+                  <div className="text-sm text-gray-600">Personal projects</div>
+                </div>
+              </div>
+              
+              <div className="h-8 w-px bg-gray-300" />
               
               {/* Breadcrumb Navigation */}
               <div className="flex items-center gap-2 text-sm">
-                <Link href="/dashboard" className="text-gray-500 hover:text-gray-700">
+                <Link href="/dashboard" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">
                   Projects
                 </Link>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
+                <span className="text-gray-400">→</span>
                 <span className="font-medium text-gray-900">{project.name}</span>
               </div>
             </div>
 
             {/* Status Indicators */}
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-gray-600">Live</span>
+                  <div className="w-2 h-2 bg-green-500" />
+                  <span className="text-gray-700 font-medium">LIVE</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600">Last saved 2m ago</span>
+                  <span className="text-gray-600 font-medium">Last saved 2m ago</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600">3 collaborators</span>
+                  <span className="text-gray-600 font-medium">3 collaborators</span>
                 </div>
               </div>
               
-              <div className="h-8 w-px bg-gray-200" />
+              <div className="h-8 w-px bg-gray-300" />
               
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" className="text-gray-600">
-                  <GitBranch className="w-4 h-4 mr-2" />
+              <div className="flex items-center gap-3">
+                <button className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 hover:bg-gray-200 transition-colors">
                   Version 2.1
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Share2 className="w-4 h-4 mr-2" />
+                </button>
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
                   Share
-                </Button>
+                </button>
               </div>
             </div>
           </div>
         </div>
 
         {/* Workflow Control Bar */}
-        <div className="px-6 py-4 bg-gray-50/50">
+        <div className="px-8 py-6 bg-gray-100 border-b border-gray-300">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-8">
               {/* Workflow Metrics */}
-              <div className="flex items-center gap-8">
-                <div className="group">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-light text-gray-900">{state.nodes.length}</span>
-                    <span className="text-sm text-gray-500">nodes</span>
-                  </div>
+              <div className="flex items-center gap-12">
+                <div className="text-center">
+                  <div className="text-2xl font-light text-gray-900">{state.nodes.length}</div>
+                  <div className="text-sm font-medium text-gray-600 uppercase tracking-wide">NODES</div>
                 </div>
                 
-                <div className="group">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-light text-gray-900">{state.connections.length}</span>
-                    <span className="text-sm text-gray-500">connections</span>
-                  </div>
+                <div className="text-center">
+                  <div className="text-2xl font-light text-gray-900">{state.connections.length}</div>
+                  <div className="text-sm font-medium text-gray-600 uppercase tracking-wide">CONNECTIONS</div>
                 </div>
                 
-                <div className="h-10 w-px bg-gray-300" />
+                <div className="h-12 w-px bg-gray-300" />
                 
-                <div className="group">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-light text-gray-900">98%</span>
-                    <span className="text-sm text-gray-500">success</span>
-                  </div>
+                <div className="text-center">
+                  <div className="text-2xl font-light text-gray-900">98%</div>
+                  <div className="text-sm font-medium text-gray-600 uppercase tracking-wide">SUCCESS RATE</div>
                 </div>
                 
-                <div className="group">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-light text-gray-900">245</span>
-                    <span className="text-sm text-gray-500">ms avg</span>
-                  </div>
+                <div className="text-center">
+                  <div className="text-2xl font-light text-gray-900">245</div>
+                  <div className="text-sm font-medium text-gray-600 uppercase tracking-wide">MS AVG</div>
                 </div>
               </div>
               
-              <div className="h-10 w-px bg-gray-300" />
+              <div className="h-12 w-px bg-gray-300" />
               
               {/* Validation Status */}
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-lg border border-gray-300">
-                  <CheckCircle className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">Workflow Valid</span>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 px-4 py-2 bg-white border border-gray-300">
+                  <div className="w-3 h-3 bg-green-500" />
+                  <span className="text-sm font-medium text-gray-900">WORKFLOW VALID</span>
                 </div>
-                <Badge variant="secondary" className="border-gray-300">
-                  <Zap className="w-3 h-3 mr-1" />
-                  Optimized
-                </Badge>
+                <div className="px-3 py-1 bg-blue-50 text-blue-800 border border-blue-200 text-xs font-medium uppercase tracking-wide">
+                  OPTIMIZED
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
             {/* Action Buttons */}
-            <Button
-              variant="outline"
-              size="default"
-            >
-              <FileJson className="w-4 h-4 mr-2" />
+            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
               Export
-            </Button>
+            </button>
             
-            <Button
-              variant="secondary"
-              size="default"
+            <button 
               onClick={() => console.log('Save')}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 hover:bg-gray-200 transition-colors"
             >
-              <Save className="w-4 h-4 mr-2" />
               Save Changes
-            </Button>
+            </button>
               
               {/* Run Controls */}
               {isRunning ? (
-                <Button
+                <button
                   onClick={handleStop}
-                  size="default"
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="px-6 py-2 text-sm font-medium bg-red-600 hover:bg-red-700 text-white border border-red-600 transition-colors"
                 >
-                  <Pause className="w-4 h-4 mr-2" />
                   Stop Execution
-                </Button>
+                </button>
               ) : (
-                <Button
+                <button
                   onClick={handleRun}
-                  size="default"
-                  className="bg-black hover:bg-gray-800 text-white"
+                  className="px-6 py-2 text-sm font-medium bg-black hover:bg-gray-800 text-white border border-black transition-colors"
                 >
                   Deploy Workflow
-                  <Play className="w-4 h-4 ml-2" />
-                </Button>
+                </button>
               )}
               
               {/* Settings */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700">
-                    <Settings className="w-5 h-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem className="gap-2">
-                    <Activity className="w-4 h-4" />
-                    Performance Monitor
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2">
-                    <AlertCircle className="w-4 h-4" />
-                    Error Logs
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="gap-2">
-                    <Settings className="w-4 h-4" />
-                    Workflow Settings
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <button className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
+                Settings
+              </button>
             </div>
           </div>
         </div>
