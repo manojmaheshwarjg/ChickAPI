@@ -1,7 +1,7 @@
 {
   "name": "chickapi",
   "version": "1.0.0",
-  "description": "ChickAPI - A visual programming tool for designing and testing API workflows",
+  "description": "ChickAPI - A visual programming tool for designing, and testing API workflows",
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
