@@ -1,11 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Play, Calendar, Download, Eye, Trash2, RefreshCw, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import toast, { Toaster } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import DiscoveryJobModal from '@/components/discovery/DiscoveryJobModal'
 import EndpointDetailModal from '@/components/discovery/EndpointDetailModal'
 import DiscoveryResults from '@/components/discovery/DiscoveryResults'
@@ -36,30 +34,71 @@ export default function DiscoveryPage() {
     loadJobs()
   }, [])
 
+  // Mock data for discovery jobs
+  const mockJobs: DiscoveryJob[] = [
+    {
+      id: '1',
+      name: 'E-commerce API Discovery',
+      status: 'completed',
+      schedule: '0 0 * * *',
+      lastRun: new Date('2024-09-15T10:30:00Z'),
+      nextRun: new Date('2024-09-16T10:30:00Z'),
+      endpointCount: 47,
+      config: {
+        baseUrl: 'https://api.shopify.com',
+        depth: 3,
+        includeAuth: true
+      }
+    },
+    {
+      id: '2',
+      name: 'Payment Gateway Analysis',
+      status: 'running',
+      schedule: 'manual',
+      lastRun: new Date('2024-09-15T14:15:00Z'),
+      endpointCount: 23,
+      config: {
+        baseUrl: 'https://api.stripe.com',
+        depth: 2,
+        includeAuth: true
+      }
+    },
+    {
+      id: '3',
+      name: 'Social Media API Scan',
+      status: 'pending',
+      schedule: '*/30 * * * *',
+      nextRun: new Date('2024-09-15T15:00:00Z'),
+      endpointCount: 0,
+      config: {
+        baseUrl: 'https://api.twitter.com',
+        depth: 4,
+        includeAuth: false
+      }
+    },
+    {
+      id: '4',
+      name: 'Internal API Audit',
+      status: 'failed',
+      lastRun: new Date('2024-09-14T09:00:00Z'),
+      endpointCount: 12,
+      config: {
+        baseUrl: 'https://internal-api.company.com',
+        depth: 5,
+        includeAuth: true
+      }
+    }
+  ]
+
   const loadJobs = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/discovery/jobs')
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
-        const errorMessage = errorData?.error || `HTTP error! status: ${response.status}`
-        throw new Error(errorMessage)
-      }
-      
-      const data = await response.json()
-      setJobs(data)
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 500))
+      setJobs(mockJobs)
     } catch (error) {
       console.error('Failed to load discovery jobs:', error)
-      const message = error instanceof Error ? error.message : 'Failed to load discovery jobs. Please try again.'
-      
-      if (message.includes('Database connection failed') || message.includes('ECONNREFUSED')) {
-        toast.error('MongoDB not running. Please start MongoDB or check connection settings.')
-      } else if (message.includes('Database not found') || message.includes('Prisma')) {
-        toast.error('Database not initialized. Please run: npm run db:setup')
-      } else {
-        toast.error(message)
-      }
+      toast.error('Failed to load discovery jobs. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -82,14 +121,28 @@ export default function DiscoveryPage() {
       setRunningJobs(prev => new Set([...prev, jobId]))
       toast.loading('Starting discovery job...', { id: `run-${jobId}` })
       
-      const response = await fetch(`/api/discovery/jobs/${jobId}/run`, { method: 'POST' })
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
+      // Update job status to running
+      setJobs(prev => prev.map(job => 
+        job.id === jobId 
+          ? { ...job, status: 'running' as const, lastRun: new Date() }
+          : job
+      ))
 
       toast.success('Discovery job started successfully!', { id: `run-${jobId}` })
-      await loadJobs()
+      
+      // Simulate job completion after 3 seconds
+      setTimeout(() => {
+        setJobs(prev => prev.map(job => 
+          job.id === jobId 
+            ? { ...job, status: 'completed' as const, endpointCount: Math.floor(Math.random() * 50) + 10 }
+            : job
+        ))
+        toast.success(`Discovery job ${jobId} completed!`)
+      }, 3000)
+      
     } catch (error) {
       console.error('Failed to run job:', error)
       toast.error('Failed to start discovery job. Please try again.', { id: `run-${jobId}` })
@@ -111,14 +164,13 @@ export default function DiscoveryPage() {
       setDeletingJobs(prev => new Set([...prev, jobId]))
       toast.loading('Deleting discovery job...', { id: `delete-${jobId}` })
       
-      const response = await fetch(`/api/discovery/jobs/${jobId}`, { method: 'DELETE' })
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 800))
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
+      // Remove job from state
+      setJobs(prev => prev.filter(job => job.id !== jobId))
 
       toast.success('Discovery job deleted successfully!', { id: `delete-${jobId}` })
-      await loadJobs()
     } catch (error) {
       console.error('Failed to delete job:', error)
       toast.error('Failed to delete discovery job. Please try again.', { id: `delete-${jobId}` })
@@ -140,13 +192,23 @@ export default function DiscoveryPage() {
     try {
       toast.loading('Preparing export...', { id: `export-${jobId}` })
       
-      const response = await fetch(`/api/discovery/jobs/${jobId}/export?format=${format}`)
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500))
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+      // Create mock export data
+      const mockData = {
+        openapi: {
+          openapi: "3.0.0",
+          info: { title: "Discovered API", version: "1.0.0" },
+          paths: {},
+          components: { schemas: {} }
+        },
+        json: { endpoints: [], schemas: [], metadata: {} },
+        csv: "endpoint,method,status,responseTime\n/api/users,GET,200,150ms\n/api/orders,POST,201,200ms"
       }
       
-      const blob = await response.blob()
+      const data = format === 'csv' ? mockData.csv : JSON.stringify(mockData[format as keyof typeof mockData], null, 2)
+      const blob = new Blob([data], { type: format === 'csv' ? 'text/csv' : 'application/json' })
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -161,15 +223,6 @@ export default function DiscoveryPage() {
     }
   }
 
-  const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
-    switch (status) {
-      case 'running': return 'default'
-      case 'completed': return 'secondary'
-      case 'failed': return 'destructive'
-      case 'pending': return 'outline'
-      default: return 'outline'
-    }
-  }
 
   const formatSchedule = (schedule: string) => {
     if (!schedule || schedule === 'manual') return 'Manual'
@@ -188,203 +241,198 @@ export default function DiscoveryPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-background border-b border-border px-4 py-3">
-        <div className="flex items-center justify-between">
-          {/* Left Section */}
-          <div className="flex items-center gap-6">
-            <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-4 w-4 mr-1" />
-              Back to Workflow
-            </Link>
-            <div className="h-5 w-px bg-border"></div>
-            <div>
-              <h1 className="text-xl font-semibold text-foreground">API Discovery</h1>
-              <p className="text-sm text-muted-foreground">
-                Automatically discover and document API endpoints
-              </p>
+      <header className="bg-white border-b border-gray-300">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            {/* Left Section */}
+            <div className="flex items-center gap-6">
+              <Link href="/" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium">
+                ← Back to Workflow
+              </Link>
+              <div className="h-6 w-px bg-gray-300"></div>
+              <div>
+                <div className="flex items-center gap-4 mb-2">
+                  <h1 className="text-3xl font-light text-gray-900 tracking-tight">API Discovery</h1>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-300 to-transparent" />
+                </div>
+                <p className="text-gray-600 font-medium">
+                  Automatically discover and document API endpoints
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={() => loadJobs()}
-              variant="outline"
-              disabled={refreshing}
-              className="gap-2"
-            >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-            <Button
-              onClick={handleCreateJob}
-              className="gap-2"
-            >
-              <Plus className="h-4 w-4" />
-              New Discovery Job
-            </Button>
+            {/* Right Section */}
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => loadJobs()}
+                variant="outline"
+                disabled={refreshing}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Refresh
+              </Button>
+              <Button
+                onClick={handleCreateJob}
+                className="bg-black hover:bg-gray-800 text-white px-6 py-3 font-medium"
+              >
+                New Discovery Job
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full p-4">
+      <main className="px-8 py-8 bg-gray-50 min-h-screen">
+        <div className="max-w-[1200px] mx-auto">
 
           {/* Jobs List */}
-          <div className="panel h-full flex flex-col">
+          <div className="bg-white border border-gray-300 min-h-[600px]">
             {loading ? (
-              <div className="panel-body flex-1 flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center py-24">
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                  <p className="mt-2 text-sm text-muted-foreground">Loading discovery jobs...</p>
+                  <div className="animate-spin w-8 h-8 border-2 border-gray-300 border-t-gray-900 mx-auto mb-4"></div>
+                  <p className="text-gray-600 font-medium">Loading discovery jobs...</p>
                 </div>
               </div>
             ) : jobs.length === 0 ? (
-              <div className="panel-body flex-1 flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center py-24">
                 <div className="text-center">
-                  <div className="text-muted-foreground mb-4">
-                    <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                  <div className="w-16 h-16 bg-gray-100 flex items-center justify-center mx-auto mb-4 font-bold text-gray-700">
+                    API
                   </div>
-                  <h3 className="text-lg font-medium text-foreground mb-2">No discovery jobs yet</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Get started by creating your first discovery job</p>
-                  <Button onClick={handleCreateJob} className="gap-2">
-                    <Plus className="h-4 w-4" />
+                  <h3 className="text-xl font-light text-gray-900 mb-2 tracking-tight">No discovery jobs yet</h3>
+                  <p className="text-gray-600 mb-6 font-medium">Get started by creating your first discovery job</p>
+                  <Button onClick={handleCreateJob} className="bg-black hover:bg-gray-800 text-white px-6 py-3 font-medium">
                     Create Discovery Job
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="flex-1 overflow-y-auto">
-                <div className="divide-y divide-border">
-                  {/* Single Column Card Layout */}
+              <div className="p-6">
+                <div className="space-y-4">
                   {jobs.map((job) => (
-                    <div key={job.id} className="p-6 hover:bg-muted/50 transition-colors">
-                      <div className="flex flex-col space-y-4">
-                        {/* Header */}
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1 min-w-0">
-                            <h3 className="text-lg font-medium text-foreground truncate">
-                              {job.name}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">ID: {job.id.slice(0, 8)}...</p>
+                    <div key={job.id} className="border border-gray-200 p-6 bg-white hover:bg-gray-50 transition-colors">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-gray-100 flex items-center justify-center font-bold text-gray-700 text-sm">
+                            API
                           </div>
-                          <Badge variant={getStatusVariant(job.status)} className="text-xs">
-                            {job.status}
-                          </Badge>
-                        </div>
-
-                        {/* Metrics */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Calendar className="h-4 w-4 mr-2" />
-                            <span className="font-medium">Schedule:</span>
-                            <span className="ml-1">
-                              {job.schedule && job.schedule !== 'manual' ? formatSchedule(job.schedule) : 'Manual'}
-                            </span>
-                          </div>
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <Eye className="h-4 w-4 mr-2" />
-                            <span className="font-medium">Endpoints:</span>
-                            <span className="ml-1">{job.endpointCount}</span>
-                          </div>
-                          <div className="flex items-center text-sm text-muted-foreground">
-                            <RefreshCw className="h-4 w-4 mr-2" />
-                            <span className="font-medium">Last Run:</span>
-                            <span className="ml-1">
-                              {job.lastRun ? new Date(job.lastRun).toLocaleString() : 'Never'}
-                            </span>
+                          <div>
+                            <h3 className="font-medium text-lg text-gray-900 tracking-tight">{job.name}</h3>
+                            <p className="text-gray-600 font-medium text-sm">ID: {job.id.slice(0, 8)}...</p>
                           </div>
                         </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <span className={`px-3 py-1 text-sm font-medium border ${
+                            job.status === 'running' 
+                              ? 'bg-blue-50 text-blue-800 border-blue-200' 
+                              : job.status === 'completed' 
+                              ? 'bg-green-50 text-green-800 border-green-200' 
+                              : 'bg-red-50 text-red-800 border-red-200'
+                          }`}>
+                            {job.status === 'running' && '●'} {job.status.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
 
-                        {/* Actions */}
-                        <div className="flex flex-wrap items-center gap-2 pt-2">
-                          <Button
+                      <div className="grid grid-cols-3 gap-6 mb-4 text-sm">
+                        <div>
+                          <span className="text-gray-500 font-medium block mb-1">Schedule</span>
+                          <p className="text-gray-900 font-medium">
+                            {job.schedule && job.schedule !== 'manual' ? formatSchedule(job.schedule) : 'Manual'}
+                          </p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 font-medium block mb-1">Endpoints</span>
+                          <p className="text-gray-900 font-medium">{job.endpointCount}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-500 font-medium block mb-1">Last Run</span>
+                          <p className="text-gray-900 font-medium">
+                            {job.lastRun ? new Date(job.lastRun).toLocaleString() : 'Never'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-3">
+                          <button 
                             onClick={() => handleRunJob(job.id)}
                             disabled={runningJobs.has(job.id) || job.status === 'running'}
-                            variant="outline"
-                            size="sm"
-                            className="gap-2"
+                            className={`px-4 py-2 text-sm font-medium border transition-colors ${
+                              runningJobs.has(job.id) || job.status === 'running'
+                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                : 'bg-black text-white border-black hover:bg-gray-800'
+                            }`}
                           >
-                            {runningJobs.has(job.id) || job.status === 'running' ? (
-                              <RefreshCw className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Play className="h-4 w-4" />
-                            )}
-                            {runningJobs.has(job.id) || job.status === 'running' ? 'Running' : 'Run'}
-                          </Button>
-                          <Button
+                            {runningJobs.has(job.id) || job.status === 'running' ? 'Running...' : 'Run'}
+                          </button>
+                          
+                          <button 
                             onClick={() => handleViewResults(job)}
-                            variant="outline"
-                            size="sm"
-                            className="gap-2"
+                            className="px-4 py-2 text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
                           >
-                            <Eye className="h-4 w-4" />
                             View
-                          </Button>
+                          </button>
+                          
                           <div className="relative group">
-                            <Button variant="outline" size="sm" className="gap-2">
-                              <Download className="h-4 w-4" />
-                              Export
-                            </Button>
-                            <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-background ring-1 ring-border hidden group-hover:block z-10">
+                            <button className="px-4 py-2 text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors flex items-center gap-2">
+                              Export ▼
+                            </button>
+                            <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-300 shadow-lg hidden group-hover:block z-10">
                               <div className="py-1">
                                 <button
                                   onClick={() => handleExportJob(job.id, 'openapi')}
-                                  className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium"
                                 >
                                   Export as OpenAPI
                                 </button>
                                 <button
                                   onClick={() => handleExportJob(job.id, 'postman')}
-                                  className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium"
                                 >
                                   Export as Postman
                                 </button>
                                 <button
                                   onClick={() => handleExportJob(job.id, 'har')}
-                                  className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium"
                                 >
                                   Export as HAR
                                 </button>
                                 <button
                                   onClick={() => handleExportJob(job.id, 'markdown')}
-                                  className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium"
                                 >
                                   Export as Markdown
                                 </button>
                               </div>
                             </div>
                           </div>
-                          <Button
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          <button 
                             onClick={() => handleEditJob(job)}
-                            variant="ghost"
-                            size="sm"
-                            className="gap-2"
+                            className="px-4 py-2 text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
                           >
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                            </svg>
                             Edit
-                          </Button>
-                          <Button
+                          </button>
+                          
+                          <button 
                             onClick={() => handleDeleteJob(job.id)}
                             disabled={deletingJobs.has(job.id)}
-                            variant="destructive"
-                            size="sm"
-                            className="gap-2"
+                            className={`px-4 py-2 text-sm font-medium border transition-colors ${
+                              deletingJobs.has(job.id)
+                                ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                                : 'bg-white text-red-600 border-red-300 hover:bg-red-50'
+                            }`}
                           >
-                            {deletingJobs.has(job.id) ? (
-                              <RefreshCw className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-4 w-4" />
-                            )}
-                            {deletingJobs.has(job.id) ? 'Deleting' : 'Delete'}
-                          </Button>
+                            {deletingJobs.has(job.id) ? 'Deleting...' : 'Delete'}
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -394,7 +442,7 @@ export default function DiscoveryPage() {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Modals */}
       <DiscoveryJobModal

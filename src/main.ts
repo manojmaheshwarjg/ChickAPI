@@ -48,9 +48,15 @@ class ChickAPIApplication {
             titleBarStyle: 'default'
         });
 
-        // Load the renderer
-        const rendererPath = path.join(__dirname, '..', 'src', 'renderer', 'index.html');
-        this.mainWindow.loadFile(rendererPath);
+        // Load the Next.js app
+        if (this.isDevelopment) {
+            // In development, load from Next.js dev server
+            this.mainWindow.loadURL('http://localhost:3000');
+        } else {
+            // In production, you might want to load a built Next.js app
+            // or serve it from a local server
+            this.mainWindow.loadURL('http://localhost:3000');
+        }
 
         // Show window when ready
         this.mainWindow.once('ready-to-show', () => {
